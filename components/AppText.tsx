@@ -9,14 +9,10 @@ interface Props {
 
 const AppText = ({ type, children }: Props) => {
   const [fontsLoaded, fontError] = useFonts({
-    "DMSans-Thin": require("./assets/font/DMSans-Thin"),
-    "DMSans-Light": require("./assets/font/DMSans-Light"),
-    "DMSans-Regular": require("./assets/font/DMSans-Regular"),
-    "DMSans-Meduim": require("./assets/font/DMSans-Meduim"),
-    "DMSans-SemiBold": require("./assets/font/DMSans-SemiBold"),
-    "DMSans-Bold": require("./assets/font/DMSans-Bold"),
-    "DMSans-Black": require("./assets/font/DMSans-Black"),
-    "DMSans-ExtraBold": require("./assets/font/DMSans-ExtraBold"),
+    DMSansLight: require("../assets/font/DMSans-Light.ttf"),
+    DMSansRegular: require("../assets/font/DMSans-Regular.ttf"),
+    DMSansMeduim: require("../assets/font/DMSans-Medium.ttf"),
+    DMSansBold: require("../assets/font/DMSans-Bold.ttf"),
   });
 
   return (

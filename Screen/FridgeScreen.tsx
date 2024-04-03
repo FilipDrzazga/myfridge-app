@@ -1,10 +1,11 @@
 import { StyleSheet, View, Text } from "react-native";
 import React from "react";
+import AppText from "../components/AppText";
 
 const FridgeScreen = () => {
   return (
     <View style={styles.container}>
-      <Text>FridgeScreen</Text>
+      <AppText type="DMSansBold">FridgeScreen</AppText>
     </View>
   );
 };
