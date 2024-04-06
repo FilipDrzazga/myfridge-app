@@ -1,25 +1,26 @@
-import { View, Text } from "react-native";
+import { Text } from "react-native";
 import React from "react";
 import { useFonts } from "expo-font";
 
 interface Props {
-  type: string;
+  fontType: string;
+  fontSize: number;
+  color?: string;
   children: React.ReactNode;
 }
 
-const AppText = ({ type, children }: Props) => {
+const AppText = ({ fontType, fontSize, color, children }: Props) => {
   const [fontsLoaded, fontError] = useFonts({
-    DMSansLight: require("../assets/font/DMSans-Light.ttf"),
-    DMSansRegular: require("../assets/font/DMSans-Regular.ttf"),
-    DMSansMeduim: require("../assets/font/DMSans-Medium.ttf"),
-    DMSansBold: require("../assets/font/DMSans-Bold.ttf"),
+    PoppinsLight: require("../assets/font/Poppins-Light.ttf"),
+    PoppinsRegular: require("../assets/font/Poppins-Regular.ttf"),
+    PoppinsBlack: require("../assets/font/Poppins-Black.ttf"),
   });
 
-  return (
-    <View>
-      <Text style={{ fontFamily: type }}>{children}</Text>
-    </View>
-  );
+  if (!fontsLoaded && !fontError) {
+    return null;
+  }
+
+  return <Text style={{ fontFamily: fontType, color: color, fontSize: fontSize }}>{children}</Text>;
 };
 
 export default AppText;

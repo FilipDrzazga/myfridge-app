@@ -2,7 +2,8 @@ const GlobalStyle = {
   color: {
     black100: "black",
     white100: "white",
-    gray100: "#99a0ad",
+    gray100: "#c0bebb",
+    screenBackgroundColor: "white",
   },
 };
 

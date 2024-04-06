@@ -6,22 +6,21 @@ interface Props {
 }
 
 const FrezzerSmall = (props: Props) => (
-  <Svg {...props} width={21} height={30} fill="none">
-    <Path stroke={props.color} strokeLinecap="round" strokeWidth={3} d="M15 14v4" />
-    <Circle cx={13.5} cy={6.5} r={1.5} fill={props.color} />
-    <Circle cx={9.5} cy={6.5} r={1.5} fill={props.color} />
-    <Circle cx={9.5} cy={6.5} r={1.5} fill={props.color} />
+  <Svg width={18} height={29} fill="none" {...props}>
+    <Circle cx={8} cy={6} r={1} fill={props.color} />
+    <Circle cx={12} cy={6} r={1} fill={props.color} />
+    <Path stroke={props.color} strokeLinecap="round" strokeWidth={2} d="M13 12v6" />
     <Path
       fill={props.color}
       fillRule="evenodd"
-      d="M5 21v.5h13V3H5v9H2V2a2 2 0 0 1 2-2h15a2 2 0 0 1 2 2v26a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2v-7h3Zm0 6v-2.5h13V27H5Z"
+      d="M2 3a3 3 0 0 1 3-3h10a3 3 0 0 1 3 3v23a3 3 0 0 1-3 3H5a3 3 0 0 1-3-3v-8h2v5h12V3a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v9H2V3Zm14 22H4v1a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1v-1Z"
       clipRule="evenodd"
     />
     <Path
       stroke={props.color}
       strokeLinecap="round"
       strokeWidth={2}
-      d="M3.5 18.5V14M5.091 17.841 1.91 14.659M1.909 17.841l3.182-3.182M1.25 16.25h4.5"
+      d="M3 13.5v3M1.94 13.94l2.12 2.12M4.06 13.94l-2.12 2.12M4.5 15h-3"
     />
   </Svg>
 );

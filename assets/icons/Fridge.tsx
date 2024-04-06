@@ -7,17 +7,16 @@ interface Props {
 }
 
 const FridgeSmall = (props: Props) => (
-  <Svg {...props} width={19} height={30} fill="none">
-    <Path stroke={props.color} strokeLinecap="round" strokeWidth={3} d="M13 14v4" />
+  <Svg width={16} height={29} fill="none" {...props}>
+    <Circle cx={6} cy={6} r={1} fill={props.color} />
+    <Circle cx={10} cy={6} r={1} fill={props.color} />
+    <Path stroke={props.color} strokeLinecap="round" strokeWidth={2} d="M11 12v6" />
     <Path
       fill={props.color}
       fillRule="evenodd"
-      d="M3 21.5V3h13v18.5H3Zm0 3V27h13v-2.5H3ZM0 2a2 2 0 0 1 2-2h15a2 2 0 0 1 2 2v26a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2Z"
+      d="M3 0a3 3 0 0 0-3 3v23a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3V3a3 3 0 0 0-3-3H3ZM2 18v5h12V3a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1v15Zm0 7h12v1a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1v-1Z"
       clipRule="evenodd"
     />
-    <Circle cx={11.5} cy={6.5} r={1.5} fill={props.color} />
-    <Circle cx={7.5} cy={6.5} r={1.5} fill={props.color} />
-    <Circle cx={7.5} cy={6.5} r={1.5} fill={props.color} />
   </Svg>
 );
 
