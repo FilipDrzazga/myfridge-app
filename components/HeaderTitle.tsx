@@ -10,7 +10,7 @@ const HeaderTitle = ({ name }: Props) => {
   return (
     <View>
       <AppText fontType="PoppinsRegular" fontSize={40}>
-        <AppText fontType="PoppinsBlack" color="#25f18b" fontSize={40}>
+        <AppText fontType="PoppinsBold" fontSize={40}>
           .
         </AppText>
         {name}

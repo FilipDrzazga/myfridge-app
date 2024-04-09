@@ -18,23 +18,24 @@ export default function App() {
         <Tab.Navigator
           screenOptions={{
             tabBarStyle: {
-              backgroundColor: GlobalStyle.color.white100,
+              backgroundColor: GlobalStyle.colors.tbb.background,
               height: 80,
               borderTopWidth: 0,
               elevation: 0,
               shadowColor: "transparent",
             },
             tabBarShowLabel: false,
-            tabBarActiveTintColor: GlobalStyle.color.black100,
-            tabBarInactiveTintColor: GlobalStyle.color.gray100,
+            tabBarActiveTintColor: GlobalStyle.colors.tbb.iconsActive,
+            tabBarInactiveTintColor: GlobalStyle.colors.tbb.iconsInActive,
             headerTitle: (props) => <HeaderTitle name={props.children} />,
             headerStyle: {
               height: 120,
               elevation: 0,
               shadowColor: "transparent",
+              backgroundColor: GlobalStyle.colors.tbt.background,
             },
           }}
-          sceneContainerStyle={{ backgroundColor: GlobalStyle.color.screenBackgroundColor }}
+          sceneContainerStyle={{ backgroundColor: GlobalStyle.colors.screen.background }}
           initialRouteName="Fridge"
         >
           <Tab.Screen

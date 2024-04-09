@@ -1,10 +1,10 @@
-import { StyleSheet } from "react-native";
 import React from "react";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import { useFonts } from "expo-font";
 
 import FRIDGE_CATEGORIES from "../constants/FRIDGE_CATEGORY";
 import Categories from "../components/Categories";
+import GlobalStyle from "../style/GlobalStyle";
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -18,11 +18,12 @@ const FridgeAndFreezerScreen = () => {
   }
   return (
     <Tab.Navigator
+      sceneContainerStyle={{ backgroundColor: GlobalStyle.colors.screen.background }}
       screenOptions={{
         tabBarStyle: {
-          marginTop: 20,
           shadowOpacity: 0,
           shadowColor: "transparent",
+          backgroundColor: GlobalStyle.colors.tbt.background,
         },
         tabBarItemStyle: {
           width: 130,
@@ -37,7 +38,7 @@ const FridgeAndFreezerScreen = () => {
           height: 5,
           left: (130 - 20) / 2,
           borderRadius: 5,
-          backgroundColor: "black",
+          backgroundColor: GlobalStyle.colors.indicator.color,
         },
         tabBarScrollEnabled: true,
         tabBarPressColor: "transparent",
@@ -49,9 +50,5 @@ const FridgeAndFreezerScreen = () => {
     </Tab.Navigator>
   );
 };
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-});
+
 export default FridgeAndFreezerScreen;
