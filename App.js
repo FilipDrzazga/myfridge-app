@@ -3,7 +3,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Ionicons from "@expo/vector-icons/Ionicons";
 
-import FridgeAndFreezerScreen from "./Screen/FridgeAndFreezerScreen";
+import FridgeFreezerScreen from "./Screen/FridgeFreezerScreen";
 import SettingsScreen from "./Screen/SettingsScreen";
 import HeaderTitle from "./components/HeaderTitle";
 import { FridgeSmall, FridgeLarge, FrezzerLarge, FrezzerSmall } from "./assets/icons";
@@ -40,7 +40,7 @@ export default function App() {
         >
           <Tab.Screen
             name="fridge"
-            component={FridgeAndFreezerScreen}
+            component={FridgeFreezerScreen}
             options={{
               tabBarIcon: ({ color, focused }) => {
                 return focused ? <FridgeLarge color={color} /> : <FridgeSmall color={color} />;
@@ -49,7 +49,7 @@ export default function App() {
           />
           <Tab.Screen
             name="freezer"
-            component={FridgeAndFreezerScreen}
+            component={FridgeFreezerScreen}
             options={{
               tabBarIcon: ({ color, focused }) => {
                 return focused ? <FrezzerLarge color={color} /> : <FrezzerSmall color={color} />;

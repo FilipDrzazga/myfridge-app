@@ -14,10 +14,10 @@ const GlobalStyle = {
     indicator: {
       color: "#1a1a1a",
     },
-    // product:{
-    //   container:
-    //   text:
-    // },
+    button: {
+      background: "#1a1a1a",
+      icon: "#FAF5E7",
+    },
     black: "#1a1a1a",
     yellow: "#F5D867",
     green: "#9FAF6C",
