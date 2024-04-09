@@ -39,7 +39,7 @@ const CircleProgressBar = () => {
             strokeWidth={circrle.strokeWidth}
             fill="transparent"
             strokeDasharray={2 * Math.PI * circrle.radius}
-            strokeDashoffset={100}
+            strokeDashoffset={0}
             strokeLinecap="round"
           />
           <Circle />
