@@ -8,19 +8,30 @@ import GlobalStyle from "../style/GlobalStyle";
 interface CustomButtonProps {
   title?: string;
   fontSize?: number;
-  icon?: boolean;
+  iconName?: string;
+  iconSize?: number;
+  iconColor?: string;
+  onPress?: () => void;
   additionalStyle?: { [key: string | number]: any };
 }
 
-const CustomButton = ({ title, fontSize = 16, icon, additionalStyle }: CustomButtonProps) => {
+const CustomButton = ({
+  onPress,
+  title,
+  fontSize = 16,
+  iconName,
+  iconSize,
+  iconColor,
+  additionalStyle,
+}: CustomButtonProps) => {
   return (
-    <Pressable style={{ ...additionalStyle }}>
+    <Pressable onPress={onPress} style={{ ...additionalStyle }}>
       {title && (
         <CustomText fontType="PoppinsRegular" fontSize={fontSize}>
           {title}
         </CustomText>
       )}
-      {icon && <Ionicons name="close-outline" size={45} color={GlobalStyle.colors.black} />}
+      {iconName && <Ionicons name={iconName} size={iconSize} color={iconColor} />}
     </Pressable>
   );
 };
