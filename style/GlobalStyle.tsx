@@ -17,6 +17,13 @@ const GlobalStyle = {
     button: {
       background: "#1a1a1a",
       icon: "#FAF5E7",
+      border: "#1a1a1a",
+    },
+    modal: {
+      outsideBackground: "#FAF5E7",
+      background: "#EEE8DB",
+      inputBackground: "#E0D9C8",
+      inputFontColor: "#1a1a1a",
     },
     black: "#1a1a1a",
     yellow: "#F5D867",

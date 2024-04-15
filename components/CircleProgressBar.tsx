@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { StyleSheet, View, Text } from "react-native";
 import Svg, { Circle, G } from "react-native-svg";
-import AppText from "./AppText";
+import CustomText from "./CustomText";
 import GlobalStyle from "../style/GlobalStyle";
 
 const circrle = {
@@ -18,7 +18,7 @@ const halfCircle = circrle.radius + circrle.strokeWidth;
 const CircleProgressBar = () => {
   return (
     <View style={styles.container}>
-      <AppText
+      <CustomText
         additionalStyle={{
           position: "absolute",
           top: "35%",
@@ -28,7 +28,7 @@ const CircleProgressBar = () => {
         fontType="PoppinsRegular"
       >
         100%
-      </AppText>
+      </CustomText>
       <Svg width={circrle.radius * 2} height={circrle.radius * 2} viewBox={`0 0 ${halfCircle * 2} ${halfCircle * 2}`}>
         <G rotation="-90" origin={`${halfCircle},${halfCircle}`}>
           <Circle

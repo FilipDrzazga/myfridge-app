@@ -11,7 +11,7 @@ interface Props {
   additionalStyle?: { [key: string | number]: any };
 }
 
-const AppText = ({ fontType, fontSize, color = GlobalStyle.colors.black, children, additionalStyle }: Props) => {
+const CustomText = ({ fontType, fontSize, color = GlobalStyle.colors.black, children, additionalStyle }: Props) => {
   const [fontsLoaded, fontError] = useFonts({
     PoppinsLight: require("../assets/font/Poppins-Light.ttf"),
     PoppinsRegular: require("../assets/font/Poppins-Regular.ttf"),
@@ -25,4 +25,4 @@ const AppText = ({ fontType, fontSize, color = GlobalStyle.colors.black, childre
   return <Text style={{ fontFamily: fontType, color: color, fontSize: fontSize, ...additionalStyle }}>{children}</Text>;
 };
 
-export default AppText;
+export default CustomText;

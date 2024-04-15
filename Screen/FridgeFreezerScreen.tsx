@@ -1,12 +1,11 @@
 import React from "react";
-import { View } from "react-native";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import { useFonts } from "expo-font";
 
 import FRIDGE_CATEGORIES from "../constants/FRIDGE_CATEGORY";
 import Categories from "../components/Categories";
 import GlobalStyle from "../style/GlobalStyle";
-import AppButton from "../components/AppButton";
+import CustomModal from "../components/CustomModal";
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -51,7 +50,7 @@ const FridgeFreezerScreen = () => {
           <Tab.Screen name={item.category} component={Categories} key={item.id} />
         ))}
       </Tab.Navigator>
-      <AppButton />
+      <CustomModal />
     </>
   );
 };

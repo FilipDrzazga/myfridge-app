@@ -5,7 +5,7 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 
 import FridgeFreezerScreen from "./Screen/FridgeFreezerScreen";
 import SettingsScreen from "./Screen/SettingsScreen";
-import HeaderTitle from "./components/HeaderTitle";
+import CustomHeaderTitle from "./components/CustomHeaderTitle";
 import { FridgeSmall, FridgeLarge, FrezzerLarge, FrezzerSmall } from "./assets/icons";
 import GlobalStyle from "./style/GlobalStyle";
 
@@ -27,7 +27,7 @@ export default function App() {
             tabBarShowLabel: false,
             tabBarActiveTintColor: GlobalStyle.colors.tbb.iconsActive,
             tabBarInactiveTintColor: GlobalStyle.colors.tbb.iconsInActive,
-            headerTitle: (props) => <HeaderTitle name={props.children} />,
+            headerTitle: (props) => <CustomHeaderTitle name={props.children} />,
             headerStyle: {
               height: 120,
               elevation: 0,

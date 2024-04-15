@@ -3,7 +3,7 @@ import { StyleSheet, Pressable, View } from "react-native";
 
 import GlobalStyle from "../style/GlobalStyle";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import AppText from "./AppText";
+import CustomText from "./CustomText";
 import CircleProgressBar from "./CircleProgressBar";
 
 const Product = () => {
@@ -14,15 +14,15 @@ const Product = () => {
       </View>
       <View style={styles.ProductDescriptionContainer}>
         <View>
-          <AppText fontType="PoppinsBold" fontSize={16}>
+          <CustomText fontType="PoppinsBold" fontSize={16}>
             Bananna
-          </AppText>
-          <AppText fontType="PoppinsRegular" fontSize={14}>
-            Bought 17/12/2024
-          </AppText>
-          <AppText fontType="PoppinsRegular" fontSize={14}>
+          </CustomText>
+          <CustomText fontType="PoppinsRegular" fontSize={14}>
+            Days after buy 3
+          </CustomText>
+          <CustomText fontType="PoppinsRegular" fontSize={14}>
             5/pcs
-          </AppText>
+          </CustomText>
         </View>
       </View>
       <View style={styles.ProductValue}>
@@ -31,9 +31,9 @@ const Product = () => {
             <Ionicons name="remove" size={20} color={GlobalStyle.colors.black} />
           </View>
         </Pressable>
-        <AppText fontType="PoppinsRegular" fontSize={24}>
+        <CustomText fontType="PoppinsRegular" fontSize={24}>
           5
-        </AppText>
+        </CustomText>
         <Pressable style={styles.PressableAdd}>
           <View>
             <Ionicons name="add" size={20} color={GlobalStyle.colors.black} />
