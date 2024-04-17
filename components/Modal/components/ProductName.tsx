@@ -1,4 +1,4 @@
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, View, Text } from "react-native";
 import React from "react";
 
 import GlobalStyle from "../../../style/GlobalStyle";
@@ -6,9 +6,11 @@ import CustomInput from "../../CustomInput";
 
 interface ProductNameProps {
   formikOnChange: (value: React.ChangeEvent<any> | string) => void;
+  formikErrorMsg: string;
 }
 
-const ProductName = ({ formikOnChange }: ProductNameProps) => {
+const ProductName = ({ formikOnChange, formikErrorMsg }: ProductNameProps) => {
+  console.log(formikErrorMsg);
   return (
     <View style={styles.modalSectionProductName}>
       <CustomInput
@@ -17,6 +19,7 @@ const ProductName = ({ formikOnChange }: ProductNameProps) => {
         inputMode="text"
         additionalStyle={styles.productNameInput}
       />
+      <Text style={{ width: "100%", color: "red" }}>{formikErrorMsg}</Text>
     </View>
   );
 };

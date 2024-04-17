@@ -1,4 +1,4 @@
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, View, Text } from "react-native";
 import React from "react";
 
 import GlobalStyle from "../../../style/GlobalStyle";
@@ -6,9 +6,10 @@ import CustomInput from "../../CustomInput";
 
 interface ProductQuantityProps {
   formikOnChange: (value: React.ChangeEvent<any> | string) => void;
+  formikErrorMsg: string;
 }
 
-const ProductQuantity = ({ formikOnChange }: ProductQuantityProps) => {
+const ProductQuantity = ({ formikOnChange, formikErrorMsg }: ProductQuantityProps) => {
   return (
     <View style={styles.modalSectionProductQuantity}>
       <CustomInput
@@ -18,6 +19,7 @@ const ProductQuantity = ({ formikOnChange }: ProductQuantityProps) => {
         maxLength={2}
         additionalStyle={styles.productQuantityInput}
       />
+      <Text style={{ width: "100%", color: "red" }}>{formikErrorMsg}</Text>
     </View>
   );
 };

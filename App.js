@@ -3,8 +3,8 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Ionicons from "@expo/vector-icons/Ionicons";
 
-import FridgeFreezerScreen from "./Screen/FridgeFreezerScreen";
-import SettingsScreen from "./Screen/SettingsScreen";
+import FridgeFreezerScreen from "./screen/FridgeFreezerScreen";
+import SettingsScreen from "./screen/SettingsScreen";
 import CustomHeaderTitle from "./components/CustomHeaderTitle";
 import { FridgeSmall, FridgeLarge, FrezzerLarge, FrezzerSmall } from "./assets/icons";
 import GlobalStyle from "./style/GlobalStyle";

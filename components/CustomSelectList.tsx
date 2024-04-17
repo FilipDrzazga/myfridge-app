@@ -82,6 +82,7 @@ const styles = StyleSheet.create({
     color: GlobalStyle.colors.modal.inputFontColor,
   },
   dropdownMenuStyle: {
+    marginTop: "-10%",
     borderRadius: 12,
     backgroundColor: GlobalStyle.colors.modal.background,
   },

@@ -1,4 +1,4 @@
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, View, Text } from "react-native";
 import React, { useState } from "react";
 import { DateTimePickerAndroid } from "@react-native-community/datetimepicker";
 
@@ -9,9 +9,16 @@ import CustomText from "../../CustomText";
 interface ProductDateProps {
   formikOnChangeBoughtDate: (value: React.ChangeEvent<any> | string | number) => void;
   formikOnChangeExpiryDate: (value: React.ChangeEvent<any> | string | number) => void;
+  formikBoughtErrorMsg: string;
+  formikExpiryErrorMsg: string;
 }
 
-const ProductDate = ({ formikOnChangeBoughtDate, formikOnChangeExpiryDate }: ProductDateProps) => {
+const ProductDate = ({
+  formikOnChangeBoughtDate,
+  formikOnChangeExpiryDate,
+  formikBoughtErrorMsg,
+  formikExpiryErrorMsg,
+}: ProductDateProps) => {
   const [date, setdate] = useState({
     bought: "Set Bought Day",
     expiry: "Set Expiry Day",
@@ -60,6 +67,7 @@ const ProductDate = ({ formikOnChangeBoughtDate, formikOnChangeExpiryDate }: Pro
         />
         <CustomButton onPress={setExpiryProductDate} title={date.expiry} additionalStyle={styles.customButton} />
       </View>
+      <Text style={{ width: "100%", color: "red" }}>{formikBoughtErrorMsg ?? formikExpiryErrorMsg}</Text>
     </>
   );
 };

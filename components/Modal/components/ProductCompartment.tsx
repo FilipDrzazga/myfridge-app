@@ -7,9 +7,10 @@ import CustomButton from "../../CustomButton";
 
 interface ProductCompartmentProps {
   formikOnChange: (value: React.ChangeEvent<any> | string) => void;
+  formikErrorMsg: string;
 }
 
-const ProductCompartment = ({ formikOnChange }: ProductCompartmentProps) => {
+const ProductCompartment = ({ formikOnChange, formikErrorMsg }: ProductCompartmentProps) => {
   const [compartment, setCompartment] = useState({ fridge: false, freezer: false });
 
   const handleCompartmentOnPress = (value: string): void => {
@@ -51,6 +52,7 @@ const ProductCompartment = ({ formikOnChange }: ProductCompartmentProps) => {
           additionalStyle={renderStyleBtn(compartment.freezer)}
         />
       </View>
+      <Text style={{ width: "100%", color: "red" }}>{formikErrorMsg}</Text>
     </View>
   );
 };

@@ -3,9 +3,10 @@ import { StyleSheet, Pressable, Modal, View, TouchableWithoutFeedback, Keyboard 
 import { useFormik } from "formik";
 
 import GlobalStyle from "../../style/GlobalStyle";
+import { validationSchema } from "../../validationSchema/modalValidationSchema";
 import useIsKeyboardVisible from "../../hooks/useIsKeyboardVisible";
-import { ProductCategory, ProductCompartment, ProductDate, ProductName, ProductQuantity } from "./components";
 import CustomButton from "../CustomButton";
+import { ProductCategory, ProductCompartment, ProductDate, ProductName, ProductQuantity } from "./components";
 
 const CustomModal = () => {
   const [modalVisible, setModalVisible] = useState(false);
@@ -19,8 +20,11 @@ const CustomModal = () => {
       boughtDate: "",
       expiryDate: "",
     },
-    onSubmit: (values) => {
+    validationSchema: validationSchema,
+    onSubmit: (values, actions) => {
       console.log(values);
+      setModalVisible(false);
+      actions.resetForm();
     },
   });
 
@@ -30,23 +34,37 @@ const CustomModal = () => {
 
   return (
     <>
-      <Modal animationType="slide" transparent={true} visible={modalVisible}>
+      <Modal statusBarTranslucent={true} animationType="slide" transparent={true} visible={modalVisible}>
         <Pressable onPress={closeModal} style={styles.modalOutside}>
           <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-            <View style={[styles.modalContent, isKeyboardVisible && { height: "70%" }]}>
+            <View
+              style={[
+                styles.modalContent,
+                isKeyboardVisible && { height: "75%", justifyContent: "flex-start", paddingTop: 30 },
+              ]}
+            >
               <View style={styles.modalSection}>
-                <ProductName formikOnChange={formik.handleChange("name")} />
+                <ProductName formikErrorMsg={formik.errors.name} formikOnChange={formik.handleChange("name")} />
                 <ProductCategory
+                  formikErrorMsg={formik.errors.category}
                   formikOnChange={formik.handleChange("category")}
                   isKeyboardVisible={isKeyboardVisible}
                 />
               </View>
               <View style={styles.modalSection}>
-                <ProductCompartment formikOnChange={formik.handleChange("compartment")} />
-                <ProductQuantity formikOnChange={formik.handleChange("quantity")} />
+                <ProductCompartment
+                  formikErrorMsg={formik.errors.compartment}
+                  formikOnChange={formik.handleChange("compartment")}
+                />
+                <ProductQuantity
+                  formikErrorMsg={formik.errors.quantity}
+                  formikOnChange={formik.handleChange("quantity")}
+                />
               </View>
               <View style={[styles.modalSection, { flexDirection: "column" }]}>
                 <ProductDate
+                  formikBoughtErrorMsg={formik.errors.boughtDate}
+                  formikExpiryErrorMsg={formik.errors.expiryDate}
                   formikOnChangeBoughtDate={formik.handleChange("boughtDate")}
                   formikOnChangeExpiryDate={formik.handleChange("expiryDate")}
                 />
@@ -121,7 +139,7 @@ const styles = StyleSheet.create({
   modalContent: {
     width: "100%",
     height: "55%",
-    gap: 30,
+    gap: 20,
     justifyContent: "center",
     paddingHorizontal: 30,
     borderTopRightRadius: 40,
