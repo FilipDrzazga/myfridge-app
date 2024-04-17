@@ -9,16 +9,25 @@ interface CustomInputProps {
   inputMode: InputModeOptions;
   keyboardType?: KeyboardTypeOptions;
   maxLength?: number;
+  formikOnChange?: (value: React.ChangeEvent<any> | string) => void;
   additionalStyle: { [key: string | number]: any };
 }
 
-const CustomInput = ({ additionalStyle, label, inputMode, keyboardType = "default", maxLength }: CustomInputProps) => {
+const CustomInput = ({
+  additionalStyle,
+  label,
+  inputMode,
+  keyboardType = "default",
+  maxLength,
+  formikOnChange,
+}: CustomInputProps) => {
   return (
     <>
       <CustomText fontType="PoppinsRegular" fontSize={16}>
         {label}
       </CustomText>
       <TextInput
+        onChangeText={formikOnChange}
         maxLength={maxLength}
         keyboardType={keyboardType}
         autoCorrect={false}

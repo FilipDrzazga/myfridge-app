@@ -5,7 +5,7 @@ import { useFonts } from "expo-font";
 import FRIDGE_CATEGORIES from "../constants/FRIDGE_CATEGORY";
 import Categories from "../components/Categories";
 import GlobalStyle from "../style/GlobalStyle";
-import CustomModal from "../components/CustomModal";
+import CustomModal from "../components/Modal/CustomModal";
 
 const Tab = createMaterialTopTabNavigator();
 

@@ -18,6 +18,7 @@ const GlobalStyle = {
       background: "#1a1a1a",
       icon: "#FAF5E7",
       border: "#1a1a1a",
+      font: "#EEE8DB",
     },
     modal: {
       outsideBackground: "#FAF5E7",

@@ -8,10 +8,11 @@ import GlobalStyle from "../style/GlobalStyle";
 import FRIDGE_CATEGORIES from "../constants/FRIDGE_CATEGORY";
 
 interface CustomSelectListProps {
+  formikOnChange: (value: React.ChangeEvent<any> | string) => void;
   isKeyboardVisible: boolean;
 }
 
-const CustomSelectList = ({ isKeyboardVisible }: CustomSelectListProps) => {
+const CustomSelectList = ({ isKeyboardVisible, formikOnChange }: CustomSelectListProps) => {
   const renderDropdownItem = (item: any, index: number, isSelected: boolean): React.ReactNode => {
     return (
       <View
@@ -35,14 +36,14 @@ const CustomSelectList = ({ isKeyboardVisible }: CustomSelectListProps) => {
   const renderDropdownBtn = (selectedItem: any, isOpened: boolean): React.ReactNode => {
     return (
       <View style={styles.dropdownButtonStyle}>
-        <Text style={styles.dropdownButtonTxtStyle}>{(selectedItem && selectedItem.category) || "Diary"}</Text>
+        <Text style={styles.dropdownButtonTxtStyle}>{(selectedItem && selectedItem.category) || "..."}</Text>
         <Ionicons name={isOpened ? "chevron-up" : "chevron-down"} color={GlobalStyle.colors.black} size={24} />
       </View>
     );
   };
 
   const onSelectDropdownItem = (selectItem: any, id: number): void => {
-    return console.log(selectItem, id);
+    return formikOnChange(selectItem.category);
   };
 
   return (

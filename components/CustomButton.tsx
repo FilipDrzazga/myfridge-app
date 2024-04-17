@@ -3,31 +3,41 @@ import React from "react";
 import Ionicons from "@expo/vector-icons/Ionicons";
 
 import CustomText from "./CustomText";
-import GlobalStyle from "../style/GlobalStyle";
 
 interface CustomButtonProps {
   title?: string;
   fontSize?: number;
-  iconName?: string;
+  fontColor?: string;
+  iconName?: keyof typeof Ionicons.glyphMap;
   iconSize?: number;
   iconColor?: string;
   onPress?: () => void;
+  formikOnChange?: (value: React.ChangeEvent<any> | string) => void;
   additionalStyle?: { [key: string | number]: any };
 }
 
 const CustomButton = ({
   onPress,
+  formikOnChange,
   title,
   fontSize = 16,
+  fontColor,
   iconName,
   iconSize,
   iconColor,
   additionalStyle,
 }: CustomButtonProps) => {
+  const handleOnPress = () => {
+    if (onPress && formikOnChange) {
+      return [onPress(), formikOnChange(title)];
+    }
+    return onPress ? onPress() : formikOnChange(title);
+  };
+
   return (
-    <Pressable onPress={onPress} style={{ ...additionalStyle }}>
+    <Pressable onPress={handleOnPress} style={{ ...additionalStyle }}>
       {title && (
-        <CustomText fontType="PoppinsRegular" fontSize={fontSize}>
+        <CustomText fontType="PoppinsRegular" fontSize={fontSize} color={fontColor}>
           {title}
         </CustomText>
       )}
