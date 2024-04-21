@@ -1,4 +1,10 @@
-import { TextInput, type InputModeOptions, type KeyboardTypeOptions } from "react-native";
+import {
+  TextInput,
+  type InputModeOptions,
+  type KeyboardTypeOptions,
+  type NativeSyntheticEvent,
+  type TextInputFocusEventData,
+} from "react-native";
 import React from "react";
 
 import GlobalStyle from "../style/GlobalStyle";

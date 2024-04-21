@@ -1,7 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { StyleSheet, Pressable, Modal, View, TouchableWithoutFeedback, Keyboard } from "react-native";
 import { useFormik } from "formik";
+import uuid from "react-native-uuid";
 
+import { AppContext } from "../../context/AppContext";
 import GlobalStyle from "../../style/GlobalStyle";
 import { validationSchema } from "../../validationSchema/modalValidationSchema";
 import useIsKeyboardVisible from "../../hooks/useIsKeyboardVisible";
@@ -9,6 +11,7 @@ import CustomButton from "../CustomButton";
 import { ProductCategory, ProductCompartment, ProductDate, ProductName, ProductQuantity } from "./components";
 
 const CustomModal = () => {
+  const ctx = useContext(AppContext);
   const [modalVisible, setModalVisible] = useState(false);
   const isKeyboardVisible = useIsKeyboardVisible();
   const formik = useFormik({
@@ -22,10 +25,12 @@ const CustomModal = () => {
     },
     validationSchema: validationSchema,
     onSubmit: (values, actions) => {
-      console.log(values);
       setModalVisible(false);
+      ctx.dispatch({ type: "ADD_PRODUCT", payload: { ...values, id: uuid.v4() } });
       actions.resetForm();
     },
+    validateOnChange: false,
+    validateOnBlur: false,
   });
 
   const closeModal = () => {
@@ -74,12 +79,13 @@ const CustomModal = () => {
                   onPress={formik.handleSubmit}
                   title="Save"
                   fontSize={20}
-                  additionalStyle={styles.saveButton}
+                  additionalStyle={formik.isValidating ? styles.saveButton : styles.disabledSaveButton}
                 />
                 <CustomButton
                   iconName="close-outline"
                   iconSize={40}
                   fontSize={20}
+                  formikResetForm={formik.resetForm}
                   onPress={closeModal}
                   additionalStyle={styles.closeModalButton}
                 />
@@ -113,6 +119,15 @@ const styles = StyleSheet.create({
     borderRadius: 50,
     backgroundColor: GlobalStyle.colors.button.background,
   },
+  disabledSaveButton: {
+    width: "60%",
+    justifyContent: "center",
+    alignItems: "center",
+    height: 70,
+    backgroundColor: GlobalStyle.colors.green,
+    borderRadius: 15,
+    opacity: 0.2,
+  },
   saveButton: {
     width: "60%",
     justifyContent: "center",
@@ -139,7 +154,7 @@ const styles = StyleSheet.create({
   modalContent: {
     width: "100%",
     height: "55%",
-    gap: 20,
+    gap: 10,
     justifyContent: "center",
     paddingHorizontal: 30,
     borderTopRightRadius: 40,

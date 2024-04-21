@@ -13,12 +13,14 @@ interface CustomButtonProps {
   iconColor?: string;
   onPress?: () => void;
   formikOnChange?: (value: React.ChangeEvent<any> | string) => void;
+  formikResetForm?: () => void;
   additionalStyle?: { [key: string | number]: any };
 }
 
 const CustomButton = ({
   onPress,
   formikOnChange,
+  formikResetForm,
   title,
   fontSize = 16,
   fontColor,
@@ -30,6 +32,9 @@ const CustomButton = ({
   const handleOnPress = () => {
     if (onPress && formikOnChange) {
       return [onPress(), formikOnChange(title)];
+    }
+    if (onPress && formikResetForm) {
+      return [onPress(), formikResetForm()];
     }
     return onPress ? onPress() : formikOnChange(title);
   };

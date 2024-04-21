@@ -10,7 +10,6 @@ interface ProductNameProps {
 }
 
 const ProductName = ({ formikOnChange, formikErrorMsg }: ProductNameProps) => {
-  console.log(formikErrorMsg);
   return (
     <View style={styles.modalSectionProductName}>
       <CustomInput

@@ -3,6 +3,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Ionicons from "@expo/vector-icons/Ionicons";
 
+import AppContextProvider from "./context/AppContext";
 import FridgeFreezerScreen from "./screen/FridgeFreezerScreen";
 import SettingsScreen from "./screen/SettingsScreen";
 import CustomHeaderTitle from "./components/CustomHeaderTitle";
@@ -13,7 +14,7 @@ const Tab = createBottomTabNavigator();
 
 export default function App() {
   return (
-    <>
+    <AppContextProvider>
       <NavigationContainer>
         <Tab.Navigator
           screenOptions={{
@@ -71,7 +72,7 @@ export default function App() {
           />
         </Tab.Navigator>
       </NavigationContainer>
-    </>
+    </AppContextProvider>
   );
 }
 
