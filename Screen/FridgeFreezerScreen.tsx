@@ -1,22 +1,30 @@
-import React from "react";
+import React, { useEffect, useContext } from "react";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import { useFonts } from "expo-font";
 
+import { AppContext } from "../context/AppContext";
+import GlobalStyle from "../style/GlobalStyle";
 import FRIDGE_CATEGORIES from "../constants/FRIDGE_CATEGORY";
 import Categories from "../components/Categories";
-import GlobalStyle from "../style/GlobalStyle";
 import CustomModal from "../components/Modal/CustomModal";
 
 const Tab = createMaterialTopTabNavigator();
 
-const FridgeFreezerScreen = () => {
+const FridgeFreezerScreen = ({ route }) => {
+  const ctx = useContext(AppContext);
+
   const [fontsLoaded, fontError] = useFonts({
     PoppinsRegular: require("../assets/font/Poppins-Regular.ttf"),
   });
 
+  useEffect(() => {
+    ctx.getCurrentTabCompartment(route.params.fromBottomTab);
+  }, [route]);
+
   if (!fontsLoaded && !fontError) {
     return null;
   }
+
   return (
     <>
       <Tab.Navigator

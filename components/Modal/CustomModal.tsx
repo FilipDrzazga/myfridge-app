@@ -26,7 +26,7 @@ const CustomModal = () => {
     validationSchema: validationSchema,
     onSubmit: (values, actions) => {
       setModalVisible(false);
-      ctx.dispatch({ type: "ADD_PRODUCT", payload: { ...values, id: uuid.v4() } });
+      ctx.dispatch({ type: "ADD_PRODUCT", payload: { ...values, categoryAll: "All", id: uuid.v4() } });
       actions.resetForm();
     },
     validateOnChange: false,
@@ -40,7 +40,7 @@ const CustomModal = () => {
   return (
     <>
       <Modal statusBarTranslucent={true} animationType="slide" transparent={true} visible={modalVisible}>
-        <Pressable onPress={closeModal} style={styles.modalOutside}>
+        <Pressable onPress={() => [closeModal, formik.resetForm()]} style={styles.modalOutside}>
           <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
             <View
               style={[
@@ -79,7 +79,7 @@ const CustomModal = () => {
                   onPress={formik.handleSubmit}
                   title="Save"
                   fontSize={20}
-                  additionalStyle={formik.isValidating ? styles.saveButton : styles.disabledSaveButton}
+                  additionalStyle={styles.saveButton}
                 />
                 <CustomButton
                   iconName="close-outline"
@@ -118,15 +118,6 @@ const styles = StyleSheet.create({
     height: 70,
     borderRadius: 50,
     backgroundColor: GlobalStyle.colors.button.background,
-  },
-  disabledSaveButton: {
-    width: "60%",
-    justifyContent: "center",
-    alignItems: "center",
-    height: 70,
-    backgroundColor: GlobalStyle.colors.green,
-    borderRadius: 15,
-    opacity: 0.2,
   },
   saveButton: {
     width: "60%",

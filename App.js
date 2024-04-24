@@ -1,14 +1,13 @@
-import { StyleSheet } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Ionicons from "@expo/vector-icons/Ionicons";
 
+import GlobalStyle from "./style/GlobalStyle";
 import AppContextProvider from "./context/AppContext";
 import FridgeFreezerScreen from "./screen/FridgeFreezerScreen";
 import SettingsScreen from "./screen/SettingsScreen";
 import CustomHeaderTitle from "./components/CustomHeaderTitle";
 import { FridgeSmall, FridgeLarge, FrezzerLarge, FrezzerSmall } from "./assets/icons";
-import GlobalStyle from "./style/GlobalStyle";
 
 const Tab = createBottomTabNavigator();
 
@@ -37,9 +36,10 @@ export default function App() {
             },
           }}
           sceneContainerStyle={{ backgroundColor: GlobalStyle.colors.screen.background }}
-          initialRouteName="Fridge"
+          initialRouteName="fridge"
         >
           <Tab.Screen
+            initialParams={{ fromBottomTab: "Fridge" }}
             name="fridge"
             component={FridgeFreezerScreen}
             options={{
@@ -49,6 +49,7 @@ export default function App() {
             }}
           />
           <Tab.Screen
+            initialParams={{ fromBottomTab: "Freezer" }}
             name="freezer"
             component={FridgeFreezerScreen}
             options={{
@@ -58,6 +59,7 @@ export default function App() {
             }}
           />
           <Tab.Screen
+            initialParams={{ fromBottomTab: "Settings" }}
             name="settings"
             component={SettingsScreen}
             options={{
@@ -75,7 +77,3 @@ export default function App() {
     </AppContextProvider>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {},
-});

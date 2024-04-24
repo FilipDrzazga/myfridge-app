@@ -6,22 +6,27 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import CustomText from "./CustomText";
 import CircleProgressBar from "./CircleProgressBar";
 
-const Product = () => {
+interface ProductProps {
+  name: string;
+  quantity: string;
+}
+
+const Product = ({ name, quantity }: ProductProps) => {
   return (
-    <View style={styles.ProductContainer}>
+    <Pressable style={styles.ProductContainer}>
       <View style={styles.ProductExpDate}>
         <CircleProgressBar />
       </View>
       <View style={styles.ProductDescriptionContainer}>
         <View>
           <CustomText fontType="PoppinsBold" fontSize={16}>
-            Bananna
+            {name}
           </CustomText>
           <CustomText fontType="PoppinsRegular" fontSize={14}>
             Days after buy 3
           </CustomText>
           <CustomText fontType="PoppinsRegular" fontSize={14}>
-            5/pcs
+            {quantity}/pcs
           </CustomText>
         </View>
       </View>
@@ -32,7 +37,7 @@ const Product = () => {
           </View>
         </Pressable>
         <CustomText fontType="PoppinsRegular" fontSize={24}>
-          5
+          {quantity}
         </CustomText>
         <Pressable style={styles.PressableAdd}>
           <View>
@@ -40,7 +45,7 @@ const Product = () => {
           </View>
         </Pressable>
       </View>
-    </View>
+    </Pressable>
   );
 };
 
