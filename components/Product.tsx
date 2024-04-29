@@ -1,17 +1,29 @@
-import React from "react";
+import React, { useContext } from "react";
 import { StyleSheet, Pressable, View } from "react-native";
 
 import GlobalStyle from "../style/GlobalStyle";
+import { AppContext } from "../context/AppContext";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import CustomText from "./CustomText";
 import CircleProgressBar from "./CircleProgressBar";
 
 interface ProductProps {
+  id: string;
   name: string;
   quantity: string;
+  bought: string;
 }
 
-const Product = ({ name, quantity }: ProductProps) => {
+const Product = ({ id, name, quantity, bought }: ProductProps) => {
+  const ctx = useContext(AppContext);
+
+  const increaseQuantity = () => {
+    ctx.dispatch({ type: "UPDATE_PRODUCT", payload: { field: "quantity", id: id, action: "increase" } });
+  };
+  const decreaseQuantity = () => {
+    ctx.dispatch({ type: "UPDATE_PRODUCT", payload: { field: "quantity", id: id, action: "decrease" } });
+  };
+
   return (
     <Pressable style={styles.ProductContainer}>
       <View style={styles.ProductExpDate}>
@@ -26,12 +38,12 @@ const Product = ({ name, quantity }: ProductProps) => {
             Days after buy 3
           </CustomText>
           <CustomText fontType="PoppinsRegular" fontSize={14}>
-            {quantity}/pcs
+            bought {bought}/pcs
           </CustomText>
         </View>
       </View>
       <View style={styles.ProductValue}>
-        <Pressable style={styles.PressableRemove}>
+        <Pressable onPress={decreaseQuantity} style={styles.PressableRemove}>
           <View>
             <Ionicons name="remove" size={20} color={GlobalStyle.colors.black} />
           </View>
@@ -39,7 +51,7 @@ const Product = ({ name, quantity }: ProductProps) => {
         <CustomText fontType="PoppinsRegular" fontSize={24}>
           {quantity}
         </CustomText>
-        <Pressable style={styles.PressableAdd}>
+        <Pressable onPress={increaseQuantity} style={styles.PressableAdd}>
           <View>
             <Ionicons name="add" size={20} color={GlobalStyle.colors.black} />
           </View>

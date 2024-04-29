@@ -6,7 +6,6 @@ import Product from "./Product";
 
 const Categories = ({ navigation, route }) => {
   const ctx = useContext(AppContext);
-  console.log(route.name);
 
   const filterProduct = () => {
     const productByCompartment = ctx.state.filter((item) => item.compartment === ctx.activeCompartmentTab);
@@ -22,7 +21,9 @@ const Categories = ({ navigation, route }) => {
         contentContainerStyle={{ gap: 10 }}
         data={filterProduct()}
         keyExtractor={(item) => item.id.toString()}
-        renderItem={({ item }) => <Product name={item.name} quantity={item.quantity} />}
+        renderItem={({ item }) => (
+          <Product id={item.id.toString()} name={item.name} quantity={item.quantity} bought={item.bought} />
+        )}
       />
     </View>
   );

@@ -26,7 +26,10 @@ const CustomModal = () => {
     validationSchema: validationSchema,
     onSubmit: (values, actions) => {
       setModalVisible(false);
-      ctx.dispatch({ type: "ADD_PRODUCT", payload: { ...values, categoryAll: "All", id: uuid.v4() } });
+      ctx.dispatch({
+        type: "ADD_PRODUCT",
+        payload: { ...values, bought: values.quantity, categoryAll: "All", id: uuid.v4() },
+      });
       actions.resetForm();
     },
     validateOnChange: false,
@@ -40,7 +43,7 @@ const CustomModal = () => {
   return (
     <>
       <Modal statusBarTranslucent={true} animationType="slide" transparent={true} visible={modalVisible}>
-        <Pressable onPress={() => [closeModal, formik.resetForm()]} style={styles.modalOutside}>
+        <Pressable onPress={() => (closeModal(), formik.resetForm())} style={styles.modalOutside}>
           <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
             <View
               style={[
