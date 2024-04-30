@@ -1,6 +1,7 @@
 import { StyleSheet, View, Text } from "react-native";
-import React from "react";
+import React, { useContext } from "react";
 
+import { AppContext } from "../../../context/AppContext";
 import GlobalStyle from "../../../style/GlobalStyle";
 import CustomInput from "../../CustomInput";
 
@@ -10,9 +11,11 @@ interface ProductNameProps {
 }
 
 const ProductName = ({ formikOnChange, formikErrorMsg }: ProductNameProps) => {
+  const ctx = useContext(AppContext);
   return (
     <View style={styles.modalSectionProductName}>
       <CustomInput
+        inputValue={ctx.productToUpdate && ctx.productToUpdate.name}
         formikOnChange={formikOnChange}
         label="Product name:"
         inputMode="text"

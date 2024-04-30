@@ -3,9 +3,12 @@ import React, { useReducer, createContext, useState } from "react";
 type Action =
   | { type: "ADD_PRODUCT"; payload: State }
   | { type: "REMOVE_PRODUCT"; payload: Pick<State, "id"> }
-  | { type: "UPDATE_PRODUCT"; payload: { field: string; id: string; action?: string; value?: string | number } };
+  | {
+      type: "UPDATE_PRODUCT";
+      payload: { field: string; id: string; action?: string; value?: string | number | boolean };
+    };
 
-type State = {
+export type State = {
   id: string | number[];
   name: string;
   categoryAll: string;
@@ -25,7 +28,11 @@ type ContextValue = {
   state: State[] | [];
   dispatch: React.Dispatch<Action>;
   activeCompartmentTab: string;
+  isModalVisible: boolean;
+  productToUpdate: null | State;
   getCurrentTabCompartment: (compartment: string) => void;
+  setModalVisible: () => void;
+  updateProduct: (product?: State | null) => void;
 };
 
 const reducer = (state: State[] | [], action: Action) => {
@@ -55,6 +62,7 @@ const reducer = (state: State[] | [], action: Action) => {
           }
           return item;
         }
+
         return { ...item, [payload.field]: payload.value };
       });
       return newState;
@@ -72,13 +80,24 @@ export const AppContext = createContext<ContextValue | null>(null);
 const AppContextProvider = ({ children }: AppContextProviderProps) => {
   const [state, dispatch] = useReducer(reducer, initialState);
   const [activeCompartmentTab, setActiveCompartmentTab] = useState("");
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [productToUpdate, setProductToUpdated] = useState<null | State>(null);
+  console.log(state);
 
   const ctx: ContextValue = {
     state,
     dispatch,
     activeCompartmentTab,
+    isModalVisible,
+    productToUpdate,
     getCurrentTabCompartment(value) {
       return setActiveCompartmentTab(value);
+    },
+    setModalVisible() {
+      return setIsModalVisible(!isModalVisible);
+    },
+    updateProduct(product) {
+      return product ? setProductToUpdated(product) : setProductToUpdated(null);
     },
   };
 

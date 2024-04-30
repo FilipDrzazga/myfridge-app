@@ -21,9 +21,7 @@ const Categories = ({ navigation, route }) => {
         contentContainerStyle={{ gap: 10 }}
         data={filterProduct()}
         keyExtractor={(item) => item.id.toString()}
-        renderItem={({ item }) => (
-          <Product id={item.id.toString()} name={item.name} quantity={item.quantity} bought={item.bought} />
-        )}
+        renderItem={({ item }) => <Product product={item} />}
       />
     </View>
   );

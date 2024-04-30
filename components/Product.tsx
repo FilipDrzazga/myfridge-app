@@ -2,43 +2,50 @@ import React, { useContext } from "react";
 import { StyleSheet, Pressable, View } from "react-native";
 
 import GlobalStyle from "../style/GlobalStyle";
-import { AppContext } from "../context/AppContext";
+import { AppContext, type State } from "../context/AppContext";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import CustomText from "./CustomText";
 import CircleProgressBar from "./CircleProgressBar";
 
 interface ProductProps {
-  id: string;
-  name: string;
-  quantity: string;
-  bought: string;
+  product: State;
 }
 
-const Product = ({ id, name, quantity, bought }: ProductProps) => {
+const Product = ({ product }: ProductProps) => {
   const ctx = useContext(AppContext);
 
   const increaseQuantity = () => {
-    ctx.dispatch({ type: "UPDATE_PRODUCT", payload: { field: "quantity", id: id, action: "increase" } });
+    ctx.dispatch({
+      type: "UPDATE_PRODUCT",
+      payload: { field: "quantity", id: product.id.toString(), action: "increase" },
+    });
   };
   const decreaseQuantity = () => {
-    ctx.dispatch({ type: "UPDATE_PRODUCT", payload: { field: "quantity", id: id, action: "decrease" } });
+    ctx.dispatch({
+      type: "UPDATE_PRODUCT",
+      payload: { field: "quantity", id: product.id.toString(), action: "decrease" },
+    });
+  };
+  const updateProduct = (product) => {
+    ctx.setModalVisible();
+    ctx.updateProduct(product);
   };
 
   return (
-    <Pressable style={styles.ProductContainer}>
+    <Pressable onPress={() => updateProduct(product)} style={styles.ProductContainer}>
       <View style={styles.ProductExpDate}>
         <CircleProgressBar />
       </View>
       <View style={styles.ProductDescriptionContainer}>
         <View>
           <CustomText fontType="PoppinsBold" fontSize={16}>
-            {name}
+            {product.name}
           </CustomText>
           <CustomText fontType="PoppinsRegular" fontSize={14}>
             Days after buy 3
           </CustomText>
           <CustomText fontType="PoppinsRegular" fontSize={14}>
-            bought {bought}/pcs
+            bought {product.bought}/pcs
           </CustomText>
         </View>
       </View>
@@ -49,7 +56,7 @@ const Product = ({ id, name, quantity, bought }: ProductProps) => {
           </View>
         </Pressable>
         <CustomText fontType="PoppinsRegular" fontSize={24}>
-          {quantity}
+          {product.quantity}
         </CustomText>
         <Pressable onPress={increaseQuantity} style={styles.PressableAdd}>
           <View>

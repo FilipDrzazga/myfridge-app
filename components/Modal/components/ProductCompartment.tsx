@@ -1,6 +1,7 @@
 import { StyleSheet, Text, View } from "react-native";
-import React, { CSSProperties, useState } from "react";
+import React, { type CSSProperties, useContext, useState, useEffect } from "react";
 
+import { AppContext } from "../../../context/AppContext";
 import GlobalStyle from "../../../style/GlobalStyle";
 import CustomText from "../../CustomText";
 import CustomButton from "../../CustomButton";
@@ -11,6 +12,7 @@ interface ProductCompartmentProps {
 }
 
 const ProductCompartment = ({ formikOnChange, formikErrorMsg }: ProductCompartmentProps) => {
+  const ctx = useContext(AppContext);
   const [compartment, setCompartment] = useState({ fridge: false, freezer: false });
 
   const handleCompartmentOnPress = (value: string): void => {
@@ -22,7 +24,7 @@ const ProductCompartment = ({ formikOnChange, formikErrorMsg }: ProductCompartme
     }
   };
 
-  const renderStyleBtn = (compartmentStateValue: boolean): CSSProperties => {
+  const renderStyleBtn = (compartmentStateValue: boolean | string): CSSProperties => {
     return compartmentStateValue
       ? {
           ...styles.customButton,
@@ -30,6 +32,14 @@ const ProductCompartment = ({ formikOnChange, formikErrorMsg }: ProductCompartme
         }
       : { ...styles.customButton };
   };
+
+  useEffect(() => {
+    if (ctx?.productToUpdate?.compartment) {
+      ctx.productToUpdate.compartment === "Fridge"
+        ? setCompartment({ fridge: true, freezer: false })
+        : setCompartment({ fridge: false, freezer: true });
+    }
+  }, []);
 
   return (
     <View style={styles.modalSectionProductCompartment}>
@@ -48,8 +58,12 @@ const ProductCompartment = ({ formikOnChange, formikErrorMsg }: ProductCompartme
           onPress={() => handleCompartmentOnPress("freezer")}
           formikOnChange={formikOnChange}
           title="Freezer"
-          fontColor={compartment.freezer ? GlobalStyle.colors.button.font : GlobalStyle.colors.black}
-          additionalStyle={renderStyleBtn(compartment.freezer)}
+          fontColor={
+            compartment.freezer || ctx.productToUpdate?.compartment === "Freezer"
+              ? GlobalStyle.colors.button.font
+              : GlobalStyle.colors.black
+          }
+          additionalStyle={renderStyleBtn(compartment.freezer || ctx?.productToUpdate?.compartment === "Freezer")}
         />
       </View>
       <Text style={{ width: "100%", color: "red" }}>{formikErrorMsg}</Text>

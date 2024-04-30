@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { StyleSheet, Pressable, Modal, View, TouchableWithoutFeedback, Keyboard } from "react-native";
 import { useFormik } from "formik";
 import uuid from "react-native-uuid";
@@ -12,8 +12,11 @@ import { ProductCategory, ProductCompartment, ProductDate, ProductName, ProductQ
 
 const CustomModal = () => {
   const ctx = useContext(AppContext);
-  const [modalVisible, setModalVisible] = useState(false);
   const isKeyboardVisible = useIsKeyboardVisible();
+  const closeModal = () => {
+    ctx.productToUpdate && ctx.updateProduct(null);
+    return ctx.setModalVisible();
+  };
   const formik = useFormik({
     initialValues: {
       name: "",
@@ -25,7 +28,7 @@ const CustomModal = () => {
     },
     validationSchema: validationSchema,
     onSubmit: (values, actions) => {
-      setModalVisible(false);
+      ctx.setModalVisible();
       ctx.dispatch({
         type: "ADD_PRODUCT",
         payload: { ...values, bought: values.quantity, categoryAll: "All", id: uuid.v4() },
@@ -36,13 +39,9 @@ const CustomModal = () => {
     validateOnBlur: false,
   });
 
-  const closeModal = () => {
-    setModalVisible(!modalVisible);
-  };
-
   return (
     <>
-      <Modal statusBarTranslucent={true} animationType="slide" transparent={true} visible={modalVisible}>
+      <Modal statusBarTranslucent={true} animationType="slide" transparent={true} visible={ctx.isModalVisible}>
         <Pressable onPress={() => (closeModal(), formik.resetForm())} style={styles.modalOutside}>
           <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
             <View
@@ -80,7 +79,7 @@ const CustomModal = () => {
               <View style={{ width: "100%", flexDirection: "row", justifyContent: "space-evenly", marginTop: 20 }}>
                 <CustomButton
                   onPress={formik.handleSubmit}
-                  title="Save"
+                  title={ctx.productToUpdate ? "Update" : "Save"}
                   fontSize={20}
                   additionalStyle={styles.saveButton}
                 />

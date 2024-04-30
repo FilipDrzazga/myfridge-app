@@ -1,7 +1,8 @@
+import React, { useContext, useState, useEffect } from "react";
 import { StyleSheet, View, Text } from "react-native";
-import React, { useState } from "react";
 import { DateTimePickerAndroid } from "@react-native-community/datetimepicker";
 
+import { AppContext } from "../../../context/AppContext";
 import GlobalStyle from "../../../style/GlobalStyle";
 import CustomButton from "../../CustomButton";
 import CustomText from "../../CustomText";
@@ -19,6 +20,7 @@ const ProductDate = ({
   formikBoughtErrorMsg,
   formikExpiryErrorMsg,
 }: ProductDateProps) => {
+  const ctx = useContext(AppContext);
   const [date, setdate] = useState({
     bought: "Set Bought Day",
     expiry: "Set Expiry Day",
@@ -54,6 +56,17 @@ const ProductDate = ({
       is24Hour: true,
     });
   };
+
+  useEffect(() => {
+    if (ctx?.productToUpdate?.boughtDate && ctx?.productToUpdate?.expiryDate) {
+      setdate((prevState) => ({
+        ...prevState,
+        bought: new Date(+ctx.productToUpdate.boughtDate).toLocaleDateString(),
+        expiry: new Date(+ctx.productToUpdate.expiryDate).toLocaleDateString(),
+      }));
+    }
+  }, []);
+
   return (
     <>
       <CustomText fontType="PoppinsRegular" fontSize={16}>

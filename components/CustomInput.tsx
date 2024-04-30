@@ -1,10 +1,4 @@
-import {
-  TextInput,
-  type InputModeOptions,
-  type KeyboardTypeOptions,
-  type NativeSyntheticEvent,
-  type TextInputFocusEventData,
-} from "react-native";
+import { TextInput, type InputModeOptions, type KeyboardTypeOptions } from "react-native";
 import React from "react";
 
 import GlobalStyle from "../style/GlobalStyle";
@@ -12,6 +6,7 @@ import CustomText from "./CustomText";
 
 interface CustomInputProps {
   label: string;
+  inputValue?: string;
   inputMode: InputModeOptions;
   keyboardType?: KeyboardTypeOptions;
   maxLength?: number;
@@ -22,6 +17,7 @@ interface CustomInputProps {
 const CustomInput = ({
   additionalStyle,
   label,
+  inputValue,
   inputMode,
   keyboardType = "default",
   maxLength,
@@ -33,6 +29,7 @@ const CustomInput = ({
         {label}
       </CustomText>
       <TextInput
+        placeholder={inputValue}
         onChangeText={formikOnChange}
         maxLength={maxLength}
         keyboardType={keyboardType}

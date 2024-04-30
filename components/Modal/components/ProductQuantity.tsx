@@ -1,6 +1,7 @@
 import { StyleSheet, View, Text } from "react-native";
-import React from "react";
+import React, { useContext } from "react";
 
+import { AppContext } from "../../../context/AppContext";
 import GlobalStyle from "../../../style/GlobalStyle";
 import CustomInput from "../../CustomInput";
 
@@ -10,9 +11,12 @@ interface ProductQuantityProps {
 }
 
 const ProductQuantity = ({ formikOnChange, formikErrorMsg }: ProductQuantityProps) => {
+  const ctx = useContext(AppContext);
+
   return (
     <View style={styles.modalSectionProductQuantity}>
       <CustomInput
+        inputValue={ctx.productToUpdate && ctx.productToUpdate.quantity.toString()}
         formikOnChange={formikOnChange}
         label="Quantity:"
         inputMode="numeric"
