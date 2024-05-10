@@ -28,6 +28,13 @@ const CustomModal = () => {
     },
     validationSchema: validationSchema,
     onSubmit: (values, actions) => {
+      if (ctx.productToUpdate) {
+        return console.log(values);
+        // return ctx.dispatch({
+        //   type: "UPDATE_PRODUCT",
+        //   payload: { value: values },
+        // });
+      }
       ctx.setModalVisible();
       ctx.dispatch({
         type: "ADD_PRODUCT",
@@ -38,6 +45,19 @@ const CustomModal = () => {
     validateOnChange: false,
     validateOnBlur: false,
   });
+
+  useEffect(() => {
+    if (ctx.productToUpdate) {
+      formik.setValues({
+        name: ctx.productToUpdate.name,
+        category: ctx.productToUpdate.category,
+        compartment: ctx.productToUpdate.compartment,
+        quantity: ctx.productToUpdate.quantity,
+        boughtDate: ctx.productToUpdate.boughtDate.toString(),
+        expiryDate: ctx.productToUpdate.expiryDate.toString(),
+      });
+    }
+  }, [ctx.productToUpdate]);
 
   return (
     <>
@@ -51,7 +71,11 @@ const CustomModal = () => {
               ]}
             >
               <View style={styles.modalSection}>
-                <ProductName formikErrorMsg={formik.errors.name} formikOnChange={formik.handleChange("name")} />
+                <ProductName
+                  formikValue={formik.values.name}
+                  formikErrorMsg={formik.errors.name}
+                  formikOnChange={formik.handleChange("name")}
+                />
                 <ProductCategory
                   formikErrorMsg={formik.errors.category}
                   formikOnChange={formik.handleChange("category")}

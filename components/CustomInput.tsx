@@ -29,7 +29,7 @@ const CustomInput = ({
         {label}
       </CustomText>
       <TextInput
-        placeholder={inputValue}
+        value={inputValue}
         onChangeText={formikOnChange}
         maxLength={maxLength}
         keyboardType={keyboardType}

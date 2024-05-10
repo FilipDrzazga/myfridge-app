@@ -6,16 +6,17 @@ import GlobalStyle from "../../../style/GlobalStyle";
 import CustomInput from "../../CustomInput";
 
 interface ProductNameProps {
+  formikValue: string;
   formikOnChange: (value: React.ChangeEvent<any> | string) => void;
   formikErrorMsg: string;
 }
 
-const ProductName = ({ formikOnChange, formikErrorMsg }: ProductNameProps) => {
+const ProductName = ({ formikValue, formikOnChange, formikErrorMsg }: ProductNameProps) => {
   const ctx = useContext(AppContext);
   return (
     <View style={styles.modalSectionProductName}>
       <CustomInput
-        inputValue={ctx.productToUpdate && ctx.productToUpdate.name}
+        inputValue={formikValue}
         formikOnChange={formikOnChange}
         label="Product name:"
         inputMode="text"

@@ -5,7 +5,7 @@ type Action =
   | { type: "REMOVE_PRODUCT"; payload: Pick<State, "id"> }
   | {
       type: "UPDATE_PRODUCT";
-      payload: { field: string; id: string; action?: string; value?: string | number | boolean };
+      payload: { field?: string; id?: string; action?: string; value?: string | number | boolean | Partial<State> };
     };
 
 export type State = {
@@ -82,7 +82,6 @@ const AppContextProvider = ({ children }: AppContextProviderProps) => {
   const [activeCompartmentTab, setActiveCompartmentTab] = useState("");
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [productToUpdate, setProductToUpdated] = useState<null | State>(null);
-  console.log(state);
 
   const ctx: ContextValue = {
     state,
