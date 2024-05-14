@@ -5,7 +5,7 @@ type Action =
   | { type: "REMOVE_PRODUCT"; payload: Pick<State, "id"> }
   | {
       type: "UPDATE_PRODUCT";
-      payload: { field?: string; id?: string; action?: string; value?: string | number | boolean | Partial<State> };
+      payload: { field?: string; id?: string; action?: string; value?: Partial<State> };
     };
 
 export type State = {
@@ -62,11 +62,14 @@ const reducer = (state: State[] | [], action: Action) => {
           }
           return item;
         }
-
-        return { ...item, [payload.field]: payload.value };
+        if (payload.value.id === item.id) {
+          return (item = { ...payload.value });
+        }
+        return item;
       });
       return newState;
     }
+
     default: {
       throw new Error(`Unhandled action type: ${action}`);
     }

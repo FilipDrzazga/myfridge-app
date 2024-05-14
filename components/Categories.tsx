@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { FlatList, StyleSheet, View } from "react-native";
 
 import { AppContext } from "../context/AppContext";
@@ -8,12 +8,18 @@ const Categories = ({ navigation, route }) => {
   const ctx = useContext(AppContext);
 
   const filterProduct = () => {
-    const productByCompartment = ctx.state.filter((item) => item.compartment === ctx.activeCompartmentTab);
-    const productByCategory = productByCompartment.filter((item) => {
-      return item.category === route.name || item.categoryAll === route.name ? item : null;
-    });
-    return productByCategory;
+    if (ctx.state) {
+      const productByCompartment = ctx?.state?.filter((item) => item.compartment === ctx.activeCompartmentTab);
+      const productByCategory = productByCompartment.filter((item) => {
+        return item.category === route.name || item.categoryAll === route.name ? item : null;
+      });
+      return productByCategory;
+    }
   };
+
+  useEffect(() => {
+    filterProduct();
+  }, [ctx.state]);
 
   return (
     <View style={styles.container}>

@@ -29,17 +29,18 @@ const CustomModal = () => {
     validationSchema: validationSchema,
     onSubmit: (values, actions) => {
       if (ctx.productToUpdate) {
-        return console.log(values);
-        // return ctx.dispatch({
-        //   type: "UPDATE_PRODUCT",
-        //   payload: { value: values },
-        // });
+        ctx.dispatch({
+          type: "UPDATE_PRODUCT",
+          payload: { value: { ...values, categoryAll: "All", id: ctx.productToUpdate.id.toString() } },
+        });
+        ctx.setModalVisible();
+      } else {
+        ctx.setModalVisible();
+        ctx.dispatch({
+          type: "ADD_PRODUCT",
+          payload: { ...values, bought: values.quantity, categoryAll: "All", id: uuid.v4() },
+        });
       }
-      ctx.setModalVisible();
-      ctx.dispatch({
-        type: "ADD_PRODUCT",
-        payload: { ...values, bought: values.quantity, categoryAll: "All", id: uuid.v4() },
-      });
       actions.resetForm();
     },
     validateOnChange: false,
@@ -88,6 +89,7 @@ const CustomModal = () => {
                   formikOnChange={formik.handleChange("compartment")}
                 />
                 <ProductQuantity
+                  formikValue={formik.values.quantity}
                   formikErrorMsg={formik.errors.quantity}
                   formikOnChange={formik.handleChange("quantity")}
                 />

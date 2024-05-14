@@ -6,17 +6,18 @@ import GlobalStyle from "../../../style/GlobalStyle";
 import CustomInput from "../../CustomInput";
 
 interface ProductQuantityProps {
+  formikValue: string;
   formikOnChange: (value: React.ChangeEvent<any> | string) => void;
   formikErrorMsg: string;
 }
 
-const ProductQuantity = ({ formikOnChange, formikErrorMsg }: ProductQuantityProps) => {
+const ProductQuantity = ({ formikOnChange, formikErrorMsg, formikValue }: ProductQuantityProps) => {
   const ctx = useContext(AppContext);
 
   return (
     <View style={styles.modalSectionProductQuantity}>
       <CustomInput
-        inputValue={ctx.productToUpdate && ctx.productToUpdate.quantity.toString()}
+        inputValue={formikValue}
         formikOnChange={formikOnChange}
         label="Quantity:"
         inputMode="numeric"
