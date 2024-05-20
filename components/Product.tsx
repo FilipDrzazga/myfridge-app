@@ -11,7 +11,7 @@ interface ProductProps {
   product: State;
 }
 
-const Product = ({ product }: ProductProps) => {
+const Product = React.memo(({ product }: ProductProps) => {
   const ctx = useContext(AppContext);
 
   const increaseQuantity = () => {
@@ -34,7 +34,7 @@ const Product = ({ product }: ProductProps) => {
   return (
     <Pressable onPress={() => updateProduct(product)} style={styles.ProductContainer}>
       <View style={styles.ProductExpDate}>
-        <CircleProgressBar />
+        <CircleProgressBar boughtDate={product.boughtDate} expiryDate={product.expiryDate} />
       </View>
       <View style={styles.ProductDescriptionContainer}>
         <View>
@@ -66,7 +66,7 @@ const Product = ({ product }: ProductProps) => {
       </View>
     </Pressable>
   );
-};
+});
 
 export default Product;
 

@@ -9,17 +9,13 @@ const Categories = ({ navigation, route }) => {
 
   const filterProduct = () => {
     if (ctx.state) {
-      const productByCompartment = ctx?.state?.filter((item) => item.compartment === ctx.activeCompartmentTab);
+      const productByCompartment = ctx.state.filter((item) => item.compartment === ctx.activeCompartmentTab);
       const productByCategory = productByCompartment.filter((item) => {
         return item.category === route.name || item.categoryAll === route.name ? item : null;
       });
       return productByCategory;
     }
   };
-
-  useEffect(() => {
-    filterProduct();
-  }, [ctx.state]);
 
   return (
     <View style={styles.container}>
@@ -28,6 +24,20 @@ const Categories = ({ navigation, route }) => {
         data={filterProduct()}
         keyExtractor={(item) => item.id.toString()}
         renderItem={({ item }) => <Product product={item} />}
+        ListFooterComponent={() => {
+          return (
+            <View
+              style={{
+                flexDirection: "row",
+                gap: 3,
+                width: "100%",
+                height: 100,
+                padding: 12,
+                borderRadius: 10,
+              }}
+            ></View>
+          );
+        }}
       />
     </View>
   );

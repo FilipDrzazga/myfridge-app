@@ -31,7 +31,9 @@ const CustomModal = () => {
       if (ctx.productToUpdate) {
         ctx.dispatch({
           type: "UPDATE_PRODUCT",
-          payload: { value: { ...values, categoryAll: "All", id: ctx.productToUpdate.id.toString() } },
+          payload: {
+            value: { ...values, bought: values.quantity, categoryAll: "All", id: ctx.productToUpdate.id.toString() },
+          },
         });
         ctx.setModalVisible();
       } else {

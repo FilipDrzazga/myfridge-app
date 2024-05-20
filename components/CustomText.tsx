@@ -24,5 +24,4 @@ const CustomText = ({ fontType, fontSize, color = GlobalStyle.colors.black, chil
 
   return <Text style={{ fontFamily: fontType, color: color, fontSize: fontSize, ...additionalStyle }}>{children}</Text>;
 };
-
 export default CustomText;
