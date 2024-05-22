@@ -52,7 +52,7 @@ const ProductDate = ({
       mode: "date",
       display: "spinner",
       maximumDate: new Date(2030, 11, 25),
-      minimumDate: new Date(2024, 0, 1),
+      minimumDate: new Date(),
       is24Hour: true,
     });
   };

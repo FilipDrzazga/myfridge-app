@@ -1,12 +1,29 @@
-import React, { useEffect, useState } from "react";
-import { StyleSheet, View } from "react-native";
+import React, { useCallback, useEffect, useState } from "react";
+import { type ColorValue, StyleSheet, View } from "react-native";
 import Svg, { Circle, G } from "react-native-svg";
-import Animated, { useAnimatedProps, useSharedValue, withTiming } from "react-native-reanimated";
+import Animated, {
+  processColor,
+  createAnimatedPropAdapter,
+  interpolateColor,
+  useAnimatedProps,
+  useSharedValue,
+  withTiming,
+} from "react-native-reanimated";
 import CustomText from "./CustomText";
 import GlobalStyle from "../style/GlobalStyle";
-import { number } from "yup";
 
 const AnimatedCircle = Animated.createAnimatedComponent(Circle);
+const adapter = createAnimatedPropAdapter(
+  (props) => {
+    if (Object.keys(props).includes("stroke")) {
+      props.stroke = { type: 0, payload: processColor(props.stroke as ColorValue) };
+    }
+  },
+  ["stroke"]
+);
+const radius = 40;
+const halfCircle = radius + 7;
+const circleCircumference = 2 * Math.PI * radius;
 
 type Props = {
   boughtDate: string | number;
@@ -14,48 +31,43 @@ type Props = {
 };
 
 const CircleProgressBar = ({ boughtDate, expiryDate }: Props) => {
-  const [percentageText, setPercentageText] = useState(0);
-  const circle = {
-    radius: 40,
-    strokeWidth: 7,
-  };
+  const [isDone, setIsDone] = useState(false);
+  const circleProgress = useSharedValue(0);
 
-  const halfCircle = circle.radius + circle.strokeWidth;
-  const circleCircumference = 2 * Math.PI * circle.radius;
+  const animatedCircleProps = useAnimatedProps(
+    () => {
+      const progressStrokeDashoffset = circleCircumference - circleProgress.value * circleCircumference;
+      return {
+        strokeDashoffset: progressStrokeDashoffset,
+        stroke: interpolateColor(
+          circleProgress.value,
+          [0, 0.5, 1],
+          ["rgb(250,90,50)", "rgb(248,171,28)", GlobalStyle.colors.green]
+        ),
+      };
+    },
+    [boughtDate, expiryDate],
+    adapter
+  );
 
-  const progress = useSharedValue(0);
-  const animatedProps = useAnimatedProps(() => {
-    return {
-      strokeDashoffset: circleCircumference * progress.value,
-    };
-  });
+  const calcProgress = useCallback(() => {
+    const purchaseDateProps = new Date(+boughtDate).getTime();
+    const expiryDateProps = new Date(+expiryDate).getTime();
+    const currentDate = new Date().getTime();
+
+    const totalDuration = expiryDateProps - purchaseDateProps;
+
+    const remainingDuration = +expiryDateProps - +currentDate;
+    const progress = Math.min(remainingDuration / totalDuration, 1);
+    return progress;
+  }, [boughtDate, expiryDate]);
 
   useEffect(() => {
-    const currentDate = new Date().getTime();
-    const purchaseDateFromProps = +boughtDate;
-    const expiryDateFromProps = +expiryDate;
-
-    const totalDuration = expiryDateFromProps - purchaseDateFromProps;
-    const remainingDuration = expiryDateFromProps - currentDate;
-    const percentageLeft = (remainingDuration / totalDuration) * 100;
-    const percentage = Math.floor(+percentageLeft.toFixed(2));
-
-    if (currentDate < purchaseDateFromProps) {
-      progress.value = withTiming(1, { duration: 2000 });
-      return setPercentageText(0);
-    }
-    if (currentDate > expiryDateFromProps) {
-      progress.value = withTiming(1, { duration: 2000 });
-      return setPercentageText(0);
-    }
-
-    if (percentage < 0) {
-      progress.value = withTiming(1, { duration: 2000 });
-      return setPercentageText(0);
-    }
-    if (percentage > 0) {
-      progress.value = withTiming(1 - +percentageLeft.toFixed(2) / 100, { duration: 2000 });
-      setPercentageText(Math.floor(+percentageLeft.toFixed(2)));
+    if (!isDone) {
+      circleProgress.value = withTiming(calcProgress(), {
+        duration: 2000,
+      });
+      setIsDone(true);
     }
   }, []);
 
@@ -70,29 +82,29 @@ const CircleProgressBar = ({ boughtDate, expiryDate }: Props) => {
         fontSize={16}
         fontType="PoppinsRegular"
       >
-        {percentageText}%
+        30%
       </CustomText>
-      <Svg width={circle.radius * 2} height={circle.radius * 2} viewBox={`0 0 ${halfCircle * 2} ${halfCircle * 2}`}>
+      <Svg width={radius * 2} height={radius * 2} viewBox={`0 0 ${halfCircle * 2} ${halfCircle * 2}`}>
         <G rotation={"-90"} origin={`${halfCircle},${halfCircle}`}>
           <Circle
             cx="50%"
             cy="50%"
-            r={circle.radius}
+            r={radius}
             stroke={GlobalStyle.colors.green}
-            strokeWidth={circle.strokeWidth}
+            strokeWidth={7}
             fill="transparent"
             strokeOpacity={0.2}
           />
           <Circle />
           <AnimatedCircle
+            animatedProps={animatedCircleProps}
             cx="50%"
             cy="50%"
-            r={circle.radius}
-            stroke={GlobalStyle.colors.green}
-            strokeWidth={circle.strokeWidth}
+            r={radius}
+            strokeWidth={7}
             fill="transparent"
             strokeDasharray={circleCircumference}
-            animatedProps={animatedProps}
+            // stroke={GlobalStyle.colors.green}
             strokeLinecap="round"
           />
           <AnimatedCircle />
