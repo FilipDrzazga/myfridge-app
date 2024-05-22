@@ -11,7 +11,7 @@ interface ProductProps {
   product: State;
 }
 
-const Product = React.memo(({ product }: ProductProps) => {
+const Product = ({ product }: ProductProps) => {
   const ctx = useContext(AppContext);
 
   const increaseQuantity = () => {
@@ -66,7 +66,7 @@ const Product = React.memo(({ product }: ProductProps) => {
       </View>
     </Pressable>
   );
-});
+};
 
 export default Product;
 

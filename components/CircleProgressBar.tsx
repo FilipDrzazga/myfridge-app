@@ -1,5 +1,6 @@
-import React, { useCallback, useEffect, useState } from "react";
-import { type ColorValue, StyleSheet, View } from "react-native";
+import React, { useCallback, useEffect } from "react";
+import { type ColorValue, StyleSheet, View, TextInput } from "react-native";
+
 import Svg, { Circle, G } from "react-native-svg";
 import Animated, {
   processColor,
@@ -9,10 +10,11 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from "react-native-reanimated";
-import CustomText from "./CustomText";
+import { useFonts } from "expo-font";
 import GlobalStyle from "../style/GlobalStyle";
 
 const AnimatedCircle = Animated.createAnimatedComponent(Circle);
+const AnimatedText = Animated.createAnimatedComponent(TextInput);
 const adapter = createAnimatedPropAdapter(
   (props) => {
     if (Object.keys(props).includes("stroke")) {
@@ -31,7 +33,9 @@ type Props = {
 };
 
 const CircleProgressBar = ({ boughtDate, expiryDate }: Props) => {
-  const [isDone, setIsDone] = useState(false);
+  const [fontsLoaded, fontError] = useFonts({
+    PoppinsRegular: require("../assets/font/Poppins-Regular.ttf"),
+  });
   const circleProgress = useSharedValue(0);
 
   const animatedCircleProps = useAnimatedProps(
@@ -50,6 +54,12 @@ const CircleProgressBar = ({ boughtDate, expiryDate }: Props) => {
     adapter
   );
 
+  const animatedTextProps = useAnimatedProps(() => {
+    return {
+      text: `${Math.floor(circleProgress.value * 100).toString()}%`,
+    };
+  });
+
   const calcProgress = useCallback(() => {
     const purchaseDateProps = new Date(+boughtDate).getTime();
     const expiryDateProps = new Date(+expiryDate).getTime();
@@ -63,27 +73,26 @@ const CircleProgressBar = ({ boughtDate, expiryDate }: Props) => {
   }, [boughtDate, expiryDate]);
 
   useEffect(() => {
-    if (!isDone) {
-      circleProgress.value = withTiming(calcProgress(), {
-        duration: 2000,
-      });
-      setIsDone(true);
-    }
-  }, []);
+    circleProgress.value = withTiming(calcProgress(), {
+      duration: 2000,
+    });
+  }, [expiryDate]);
+
+  if (!fontsLoaded && !fontError) {
+    return null;
+  }
 
   return (
     <View style={styles.container}>
-      <CustomText
-        additionalStyle={{
+      <AnimatedText
+        style={{
           position: "absolute",
           justifyContent: "center",
           alignItems: "center",
+          fontFamily: "PoppinsRegular",
         }}
-        fontSize={16}
-        fontType="PoppinsRegular"
-      >
-        30%
-      </CustomText>
+        animatedProps={animatedTextProps}
+      />
       <Svg width={radius * 2} height={radius * 2} viewBox={`0 0 ${halfCircle * 2} ${halfCircle * 2}`}>
         <G rotation={"-90"} origin={`${halfCircle},${halfCircle}`}>
           <Circle
@@ -104,7 +113,6 @@ const CircleProgressBar = ({ boughtDate, expiryDate }: Props) => {
             strokeWidth={7}
             fill="transparent"
             strokeDasharray={circleCircumference}
-            // stroke={GlobalStyle.colors.green}
             strokeLinecap="round"
           />
           <AnimatedCircle />

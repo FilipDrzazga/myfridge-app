@@ -1,6 +1,7 @@
-import { Text } from "react-native";
 import React from "react";
+import { Text } from "react-native";
 import { useFonts } from "expo-font";
+
 import GlobalStyle from "../style/GlobalStyle";
 
 interface Props {
