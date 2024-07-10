@@ -28,7 +28,8 @@
     "react-native-tab-view": "^3.5.2",
     "react-native-uuid": "^2.0.2",
     "typescript": "~5.3.3",
-    "yup": "^1.4.0"
+    "yup": "^1.4.0",
+    "react-native-gesture-handler": "~2.16.1"
   },
   "devDependencies": {
     "@babel/core": "^7.24.0"

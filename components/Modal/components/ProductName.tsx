@@ -22,7 +22,7 @@ const ProductName = ({ formikValue, formikOnChange, formikErrorMsg }: ProductNam
         inputMode="text"
         additionalStyle={styles.productNameInput}
       />
-      <Text style={{ width: "100%", color: "red" }}>{formikErrorMsg}</Text>
+      <Text style={{ width: "100%", color: "#ee313b" }}>{formikErrorMsg}</Text>
     </View>
   );
 };

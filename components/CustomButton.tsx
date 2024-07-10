@@ -3,6 +3,7 @@ import React from "react";
 import Ionicons from "@expo/vector-icons/Ionicons";
 
 import CustomText from "./CustomText";
+import { opacity } from "react-native-reanimated/lib/typescript/reanimated2/Colors";
 
 interface CustomButtonProps {
   title?: string;
@@ -11,6 +12,7 @@ interface CustomButtonProps {
   iconName?: keyof typeof Ionicons.glyphMap;
   iconSize?: number;
   iconColor?: string;
+  isDisabled?: boolean;
   onPress?: () => void;
   formikOnChange?: (value: React.ChangeEvent<any> | string) => void;
   formikResetForm?: () => void;
@@ -27,6 +29,7 @@ const CustomButton = ({
   iconName,
   iconSize,
   iconColor,
+  isDisabled,
   additionalStyle,
 }: CustomButtonProps) => {
   const handleOnPress = () => {
@@ -40,7 +43,11 @@ const CustomButton = ({
   };
 
   return (
-    <Pressable onPress={handleOnPress} style={{ ...additionalStyle }}>
+    <Pressable
+      disabled={isDisabled}
+      onPress={handleOnPress}
+      style={{ ...additionalStyle, opacity: isDisabled ? 0.3 : 1 }}
+    >
       {title && (
         <CustomText fontType="PoppinsRegular" fontSize={fontSize} color={fontColor}>
           {title}

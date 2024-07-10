@@ -50,12 +50,22 @@ const FridgeFreezerScreen = ({ route }) => {
             borderRadius: 5,
             backgroundColor: GlobalStyle.colors.indicator.color,
           },
+          swipeEnabled: ctx.isSelectedToDelete ? false : true,
           tabBarScrollEnabled: true,
           tabBarPressColor: "transparent",
         }}
       >
         {FRIDGE_CATEGORIES.map((item) => (
-          <Tab.Screen name={item.category} component={Categories} key={item.id} />
+          <Tab.Screen
+            name={item.category}
+            component={Categories}
+            key={item.id}
+            listeners={{
+              tabPress: (e) => {
+                ctx.isSelectedToDelete && e.preventDefault();
+              },
+            }}
+          />
         ))}
       </Tab.Navigator>
       <CustomModal />

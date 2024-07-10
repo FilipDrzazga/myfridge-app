@@ -66,7 +66,7 @@ const ProductCompartment = ({ formikOnChange, formikErrorMsg }: ProductCompartme
           additionalStyle={renderStyleBtn(compartment.freezer || ctx?.productToUpdate?.compartment === "Freezer")}
         />
       </View>
-      <Text style={{ width: "100%", color: "red" }}>{formikErrorMsg}</Text>
+      <Text style={{ width: "100%", color: "#ee313b" }}>{formikErrorMsg}</Text>
     </View>
   );
 };

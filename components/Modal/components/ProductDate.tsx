@@ -80,7 +80,7 @@ const ProductDate = ({
         />
         <CustomButton onPress={setExpiryProductDate} title={date.expiry} additionalStyle={styles.customButton} />
       </View>
-      <Text style={{ width: "100%", color: "red" }}>{formikBoughtErrorMsg ?? formikExpiryErrorMsg}</Text>
+      <Text style={{ width: "100%", color: "#ee313b" }}>{formikBoughtErrorMsg ?? formikExpiryErrorMsg}</Text>
     </>
   );
 };

@@ -2,14 +2,14 @@ import React, { useReducer, createContext, useState } from "react";
 
 type Action =
   | { type: "ADD_PRODUCT"; payload: State }
-  | { type: "REMOVE_PRODUCT"; payload: Pick<State, "id"> }
+  | { type: "REMOVE_PRODUCT"; payload: { productsToDelete: string[] } }
   | {
       type: "UPDATE_PRODUCT";
       payload: { field?: string; id?: string; action?: string; value?: Partial<State> };
     };
 
 export type State = {
-  id: string | number[];
+  id: string;
   name: string;
   categoryAll: string;
   category: string;
@@ -18,6 +18,7 @@ export type State = {
   bought: string;
   boughtDate: string | number;
   expiryDate: string | number;
+  isSelected?: boolean;
 };
 
 type AppContextProviderProps = {
@@ -30,9 +31,13 @@ type ContextValue = {
   activeCompartmentTab: string;
   isModalVisible: boolean;
   productToUpdate: null | State;
+  isSelectedToDelete: boolean;
+  productsToDelete: string[];
   getCurrentTabCompartment: (compartment: string) => void;
   setModalVisible: () => void;
   updateProduct: (product?: State | null) => void;
+  selectToDelete: (isSelected: boolean) => void;
+  updateProductsToDelete: (poductId?: string) => void;
 };
 
 const reducer = (state: State[] | [], action: Action) => {
@@ -43,8 +48,11 @@ const reducer = (state: State[] | [], action: Action) => {
       return newState;
     }
     case "REMOVE_PRODUCT": {
-      console.log("remove from state", state);
-      return { ...state };
+      const { payload } = action;
+      const uniqeIdArray = [...new Set(payload.productsToDelete)];
+      const newState = state.filter((item) => !uniqeIdArray.includes(item.id));
+
+      return newState;
     }
     case "UPDATE_PRODUCT": {
       const { payload } = action;
@@ -85,6 +93,8 @@ const AppContextProvider = ({ children }: AppContextProviderProps) => {
   const [activeCompartmentTab, setActiveCompartmentTab] = useState("");
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [productToUpdate, setProductToUpdated] = useState<null | State>(null);
+  const [isSelectedToDelete, setIsSelectedToDelete] = useState(false);
+  const [productsToDelete, setProductsToDelete] = useState([]);
 
   const ctx: ContextValue = {
     state,
@@ -92,6 +102,8 @@ const AppContextProvider = ({ children }: AppContextProviderProps) => {
     activeCompartmentTab,
     isModalVisible,
     productToUpdate,
+    isSelectedToDelete,
+    productsToDelete,
     getCurrentTabCompartment(value) {
       return setActiveCompartmentTab(value);
     },
@@ -100,6 +112,16 @@ const AppContextProvider = ({ children }: AppContextProviderProps) => {
     },
     updateProduct(product) {
       return product ? setProductToUpdated(product) : setProductToUpdated(null);
+    },
+    selectToDelete(isSelected) {
+      return isSelected ? setIsSelectedToDelete(true) : setIsSelectedToDelete(false);
+    },
+    updateProductsToDelete(productId) {
+      if (!productId) {
+        return setProductsToDelete([]);
+      } else if (productId) {
+        return setProductsToDelete((prevState) => [...prevState, productId]);
+      }
     },
   };
 

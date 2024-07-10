@@ -24,7 +24,7 @@ const ProductQuantity = ({ formikOnChange, formikErrorMsg, formikValue }: Produc
         maxLength={2}
         additionalStyle={styles.productQuantityInput}
       />
-      <Text style={{ width: "100%", color: "red" }}>{formikErrorMsg}</Text>
+      <Text style={{ width: "100%", color: "#ee313b" }}>{formikErrorMsg}</Text>
     </View>
   );
 };

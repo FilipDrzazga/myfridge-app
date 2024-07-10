@@ -1,8 +1,10 @@
 import React, { useContext } from "react";
-import { FlatList, StyleSheet, View } from "react-native";
+import { StyleSheet, View } from "react-native";
+import Animated, { LinearTransition } from "react-native-reanimated";
 
 import { AppContext } from "../context/AppContext";
 import Product from "./Product";
+import RemoveSelectedProduct from "./RemoveSelectedProduct";
 
 const Categories = ({ navigation, route }) => {
   const ctx = useContext(AppContext);
@@ -19,11 +21,12 @@ const Categories = ({ navigation, route }) => {
 
   return (
     <View style={styles.container}>
-      <FlatList
+      <Animated.FlatList
         contentContainerStyle={{ gap: 10 }}
         data={filterProduct()}
         keyExtractor={(item) => item.id.toString()}
         renderItem={({ item }) => <Product product={item} />}
+        itemLayoutAnimation={LinearTransition.delay(100)}
         ListFooterComponent={() => {
           return (
             <View
@@ -39,6 +42,7 @@ const Categories = ({ navigation, route }) => {
           );
         }}
       />
+      {ctx.isSelectedToDelete && <RemoveSelectedProduct />}
     </View>
   );
 };

@@ -1,5 +1,14 @@
-import React, { useContext } from "react";
-import { StyleSheet, Pressable, View } from "react-native";
+import React, { useContext, useEffect } from "react";
+import { StyleSheet, Pressable, View, LayoutAnimation } from "react-native";
+import { GestureDetector, Gesture } from "react-native-gesture-handler";
+import Animated, {
+  useSharedValue,
+  useAnimatedStyle,
+  withTiming,
+  runOnJS,
+  ZoomIn,
+  ZoomOut,
+} from "react-native-reanimated";
 
 import GlobalStyle from "../style/GlobalStyle";
 import { AppContext, type State } from "../context/AppContext";
@@ -13,6 +22,9 @@ interface ProductProps {
 
 const Product = ({ product }: ProductProps) => {
   const ctx = useContext(AppContext);
+
+  const scale = useSharedValue(1);
+  const opacity = useSharedValue(1);
 
   const increaseQuantity = () => {
     ctx.dispatch({
@@ -31,47 +43,85 @@ const Product = ({ product }: ProductProps) => {
     ctx.updateProduct(product);
   };
 
+  const animatedProductStyle = useAnimatedStyle(() => {
+    return {
+      opacity: opacity.value,
+      transform: [{ scale: scale.value }],
+    };
+  });
+
+  const onLongPressGesture = Gesture.LongPress()
+    .minDuration(300)
+    .onStart(() => {
+      opacity.value = withTiming(0.3, { duration: 300 });
+      scale.value = withTiming(0.95, { duration: 300 });
+      runOnJS(ctx.updateProductsToDelete)(product.id);
+    })
+    .onEnd(() => {
+      if (!ctx.isSelectedToDelete) {
+        runOnJS(ctx.selectToDelete)(true);
+      }
+    });
+
+  useEffect(() => {
+    if (!ctx.isSelectedToDelete) {
+      opacity.value = withTiming(1, { duration: 300 });
+      scale.value = withTiming(1, { duration: 300 });
+    }
+  }, [ctx.isSelectedToDelete]);
+
   return (
-    <Pressable onPress={() => updateProduct(product)} style={styles.ProductContainer}>
-      <View style={styles.ProductExpDate}>
-        <CircleProgressBar boughtDate={product.boughtDate} expiryDate={product.expiryDate} />
-      </View>
-      <View style={styles.ProductDescriptionContainer}>
-        <View>
-          <CustomText fontType="PoppinsBold" fontSize={16}>
-            {product.name}
-          </CustomText>
-          <CustomText fontType="PoppinsRegular" fontSize={14}>
-            Days after buy 3
-          </CustomText>
-          <CustomText fontType="PoppinsRegular" fontSize={14}>
-            bought {product.bought}/pcs
-          </CustomText>
-        </View>
-      </View>
-      <View style={styles.ProductValue}>
-        <Pressable onPress={decreaseQuantity} style={styles.PressableRemove}>
-          <View>
-            <Ionicons name="remove" size={20} color={GlobalStyle.colors.black} />
-          </View>
-        </Pressable>
-        <CustomText fontType="PoppinsRegular" fontSize={24}>
-          {product.quantity}
-        </CustomText>
-        <Pressable onPress={increaseQuantity} style={styles.PressableAdd}>
-          <View>
-            <Ionicons name="add" size={20} color={GlobalStyle.colors.black} />
-          </View>
-        </Pressable>
-      </View>
-    </Pressable>
+    <>
+      <GestureDetector gesture={onLongPressGesture}>
+        <Animated.View entering={ZoomIn} exiting={ZoomOut}>
+          <Animated.View style={[{ flex: 1 }, animatedProductStyle]}>
+            <Pressable
+              onPress={() => !ctx.isSelectedToDelete && updateProduct(product)}
+              style={styles.productContainer}
+            >
+              <View style={styles.productExpDate}>
+                <CircleProgressBar boughtDate={product.boughtDate} expiryDate={product.expiryDate} />
+              </View>
+              <View style={styles.productDescriptionContainer}>
+                <View>
+                  <CustomText fontType="PoppinsBold" fontSize={16}>
+                    {product.name}
+                  </CustomText>
+                  <CustomText fontType="PoppinsRegular" fontSize={14}>
+                    Days after buy 3
+                  </CustomText>
+                  <CustomText fontType="PoppinsRegular" fontSize={14}>
+                    bought {product.bought}/pcs
+                  </CustomText>
+                </View>
+              </View>
+              <View style={styles.productValue}>
+                <Pressable onPress={decreaseQuantity} style={styles.pressableRemove}>
+                  <View>
+                    <Ionicons name="remove" size={20} color={GlobalStyle.colors.black} />
+                  </View>
+                </Pressable>
+                <CustomText fontType="PoppinsRegular" fontSize={24}>
+                  {product.quantity}
+                </CustomText>
+                <Pressable onPress={increaseQuantity} style={styles.pressableAdd}>
+                  <View>
+                    <Ionicons name="add" size={20} color={GlobalStyle.colors.black} />
+                  </View>
+                </Pressable>
+              </View>
+            </Pressable>
+          </Animated.View>
+        </Animated.View>
+      </GestureDetector>
+    </>
   );
 };
 
 export default Product;
 
 const styles = StyleSheet.create({
-  ProductContainer: {
+  productContainer: {
     flexDirection: "row",
     gap: 3,
     width: "100%",
@@ -80,16 +130,16 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     backgroundColor: "#EEE8DB",
   },
-  ProductExpDate: { flex: 2, justifyContent: "center", alignItems: "center" },
-  ProductDescriptionContainer: { flex: 4, justifyContent: "center", alignItems: "flex-start" },
+  productExpDate: { flex: 2, justifyContent: "center", alignItems: "center" },
+  productDescriptionContainer: { flex: 4, justifyContent: "center", alignItems: "flex-start" },
 
-  ProductValue: {
+  productValue: {
     flex: 3,
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
   },
-  PressableAdd: {
+  pressableAdd: {
     justifyContent: "center",
     alignItems: "center",
     width: 40,
@@ -99,7 +149,7 @@ const styles = StyleSheet.create({
     borderStyle: "dashed",
     backgroundColor: GlobalStyle.colors.pink,
   },
-  PressableRemove: {
+  pressableRemove: {
     justifyContent: "center",
     alignItems: "center",
     width: 40,

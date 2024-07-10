@@ -125,6 +125,7 @@ const CustomModal = () => {
         </Pressable>
       </Modal>
       <CustomButton
+        isDisabled={ctx.isSelectedToDelete}
         onPress={closeModal}
         iconName="add"
         iconSize={50}
@@ -141,7 +142,7 @@ const styles = StyleSheet.create({
   button: {
     position: "absolute",
     bottom: 40,
-    right: 20,
+    right: 33,
     justifyContent: "center",
     alignItems: "center",
     width: 70,

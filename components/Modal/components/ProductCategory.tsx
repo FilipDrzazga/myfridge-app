@@ -13,7 +13,7 @@ const ProductCategory = ({ formikOnChange, formikErrorMsg, isKeyboardVisible }: 
   return (
     <View style={styles.modalSectionProductCategory}>
       <CustomSelectList formikOnChange={formikOnChange} isKeyboardVisible={isKeyboardVisible} />
-      <Text style={{ width: "100%", color: "red" }}>{formikErrorMsg}</Text>
+      <Text style={{ width: "100%", color: "#ee313b" }}>{formikErrorMsg}</Text>
     </View>
   );
 };
