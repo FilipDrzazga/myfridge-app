@@ -40,7 +40,13 @@ const CustomModal = () => {
         ctx.setModalVisible();
         ctx.dispatch({
           type: "ADD_PRODUCT",
-          payload: { ...values, bought: values.quantity, categoryAll: "All", id: uuid.v4() },
+          payload: {
+            ...values,
+            bought: values.quantity,
+            categoryAll: "All",
+            id: uuid.v4().toString(),
+            isSelected: false,
+          },
         });
       }
       actions.resetForm();
@@ -124,14 +130,6 @@ const CustomModal = () => {
           </TouchableWithoutFeedback>
         </Pressable>
       </Modal>
-      <CustomButton
-        isDisabled={ctx.isSelectedToDelete}
-        onPress={closeModal}
-        iconName="add"
-        iconSize={50}
-        iconColor={GlobalStyle.colors.button.icon}
-        additionalStyle={styles.button}
-      />
     </>
   );
 };
@@ -139,17 +137,6 @@ const CustomModal = () => {
 export default CustomModal;
 
 const styles = StyleSheet.create({
-  button: {
-    position: "absolute",
-    bottom: 40,
-    right: 33,
-    justifyContent: "center",
-    alignItems: "center",
-    width: 70,
-    height: 70,
-    borderRadius: 50,
-    backgroundColor: GlobalStyle.colors.button.background,
-  },
   saveButton: {
     width: "60%",
     justifyContent: "center",

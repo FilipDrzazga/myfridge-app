@@ -1,5 +1,5 @@
 import React, { useContext, useEffect } from "react";
-import { StyleSheet, Pressable, View, LayoutAnimation } from "react-native";
+import { StyleSheet, Pressable, View } from "react-native";
 import { GestureDetector, Gesture } from "react-native-gesture-handler";
 import Animated, {
   useSharedValue,
@@ -49,13 +49,19 @@ const Product = ({ product }: ProductProps) => {
       transform: [{ scale: scale.value }],
     };
   });
-
   const onLongPressGesture = Gesture.LongPress()
-    .minDuration(300)
+    .minDuration(ctx.isSelectedToDelete ? 50 : 1000)
     .onStart(() => {
-      opacity.value = withTiming(0.3, { duration: 300 });
-      scale.value = withTiming(0.95, { duration: 300 });
-      runOnJS(ctx.updateProductsToDelete)(product.id);
+      if (product.isSelected) {
+        opacity.value = withTiming(1, { duration: 300 });
+        scale.value = withTiming(1, { duration: 300 });
+        runOnJS(ctx.dispatch)({ type: "UPDATE_PRODUCT", payload: { value: { ...product, isSelected: false } } });
+      } else if (!product.isSelected) {
+        runOnJS(ctx.dispatch)({ type: "UPDATE_PRODUCT", payload: { value: { ...product, isSelected: true } } });
+        opacity.value = withTiming(0.3, { duration: 300 });
+        scale.value = withTiming(0.95, { duration: 300 });
+        runOnJS(ctx.updateProductsToDelete)(product.id);
+      }
     })
     .onEnd(() => {
       if (!ctx.isSelectedToDelete) {

@@ -4,9 +4,8 @@ import Animated, { LinearTransition } from "react-native-reanimated";
 
 import { AppContext } from "../context/AppContext";
 import Product from "./Product";
-import RemoveSelectedProduct from "./RemoveSelectedProduct";
 
-const Categories = ({ navigation, route }) => {
+const Categories = ({ route }) => {
   const ctx = useContext(AppContext);
 
   const filterProduct = () => {
@@ -42,7 +41,6 @@ const Categories = ({ navigation, route }) => {
           );
         }}
       />
-      {ctx.isSelectedToDelete && <RemoveSelectedProduct />}
     </View>
   );
 };

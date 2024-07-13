@@ -5,7 +5,13 @@ type Action =
   | { type: "REMOVE_PRODUCT"; payload: { productsToDelete: string[] } }
   | {
       type: "UPDATE_PRODUCT";
-      payload: { field?: string; id?: string; action?: string; value?: Partial<State> };
+      payload: {
+        field?: "quantity";
+        id?: string;
+        action?: "increase" | "decrease" | "resetSelection";
+        value?: Partial<State>;
+        isSelected?: boolean;
+      };
     };
 
 export type State = {
@@ -62,13 +68,16 @@ const reducer = (state: State[] | [], action: Action) => {
 
       const newState = state.map((item) => {
         if (payload.field === "quantity") {
-          if (payload.action === "increase" && item.quantity < maxValue) {
+          if (payload.action === "increase" && +item.quantity < maxValue) {
             return item.id === payload.id ? { ...item, quantity: +item.quantity + 1 } : item;
           }
-          if (payload.action === "decrease" && item.quantity > minValue) {
+          if (payload.action === "decrease" && +item.quantity > minValue) {
             return item.id === payload.id ? { ...item, quantity: +item.quantity - 1 } : item;
           }
           return item;
+        }
+        if (payload.action === "resetSelection") {
+          return { ...item, isSelected: false };
         }
         if (payload.value.id === item.id) {
           return (item = { ...payload.value });
@@ -114,6 +123,7 @@ const AppContextProvider = ({ children }: AppContextProviderProps) => {
       return product ? setProductToUpdated(product) : setProductToUpdated(null);
     },
     selectToDelete(isSelected) {
+      console.log(isSelectedToDelete);
       return isSelected ? setIsSelectedToDelete(true) : setIsSelectedToDelete(false);
     },
     updateProductsToDelete(productId) {

@@ -3,7 +3,6 @@ import React from "react";
 import Ionicons from "@expo/vector-icons/Ionicons";
 
 import CustomText from "./CustomText";
-import { opacity } from "react-native-reanimated/lib/typescript/reanimated2/Colors";
 
 interface CustomButtonProps {
   title?: string;
