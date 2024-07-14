@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useMemo } from "react";
 import { StyleSheet, Pressable, View } from "react-native";
 import { GestureDetector, Gesture } from "react-native-gesture-handler";
 import Animated, {
@@ -49,25 +49,25 @@ const Product = ({ product }: ProductProps) => {
       transform: [{ scale: scale.value }],
     };
   });
-  const onLongPressGesture = Gesture.LongPress()
-    .minDuration(ctx.isSelectedToDelete ? 50 : 1000)
-    .onStart(() => {
-      if (product.isSelected) {
-        opacity.value = withTiming(1, { duration: 300 });
-        scale.value = withTiming(1, { duration: 300 });
-        runOnJS(ctx.dispatch)({ type: "UPDATE_PRODUCT", payload: { value: { ...product, isSelected: false } } });
-      } else if (!product.isSelected) {
-        runOnJS(ctx.dispatch)({ type: "UPDATE_PRODUCT", payload: { value: { ...product, isSelected: true } } });
-        opacity.value = withTiming(0.3, { duration: 300 });
-        scale.value = withTiming(0.95, { duration: 300 });
-        runOnJS(ctx.updateProductsToDelete)(product.id);
-      }
-    })
-    .onEnd(() => {
-      if (!ctx.isSelectedToDelete) {
-        runOnJS(ctx.selectToDelete)(true);
-      }
-    });
+  const onLongPressGesture = useMemo(() => {
+    return Gesture.LongPress()
+      .minDuration(ctx.isSelectedToDelete ? 50 : 1000)
+      .onStart(() => {
+        if (!product.isSelected) {
+          opacity.value = withTiming(0.3, { duration: 300 });
+          scale.value = withTiming(0.95, { duration: 300 });
+          runOnJS(ctx.dispatch)({ type: "UPDATE_PRODUCT", payload: { value: { ...product, isSelected: true } } });
+          runOnJS(ctx.updateProductsToDelete)(product.id);
+          if (!ctx.isSelectedToDelete) {
+            runOnJS(ctx.selectToDelete)(true);
+          }
+        } else {
+          opacity.value = withTiming(1, { duration: 300 });
+          scale.value = withTiming(1, { duration: 300 });
+          runOnJS(ctx.dispatch)({ type: "UPDATE_PRODUCT", payload: { value: { ...product, isSelected: false } } });
+        }
+      });
+  }, [ctx.isSelectedToDelete, product.isSelected]);
 
   useEffect(() => {
     if (!ctx.isSelectedToDelete) {

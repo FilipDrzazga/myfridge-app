@@ -2,7 +2,7 @@ import React, { useReducer, createContext, useState } from "react";
 
 type Action =
   | { type: "ADD_PRODUCT"; payload: State }
-  | { type: "REMOVE_PRODUCT"; payload: { productsToDelete: string[] } }
+  | { type: "REMOVE_PRODUCT" }
   | {
       type: "UPDATE_PRODUCT";
       payload: {
@@ -54,9 +54,7 @@ const reducer = (state: State[] | [], action: Action) => {
       return newState;
     }
     case "REMOVE_PRODUCT": {
-      const { payload } = action;
-      const uniqeIdArray = [...new Set(payload.productsToDelete)];
-      const newState = state.filter((item) => !uniqeIdArray.includes(item.id));
+      const newState = state.filter((item) => item.isSelected === false);
 
       return newState;
     }
@@ -123,8 +121,7 @@ const AppContextProvider = ({ children }: AppContextProviderProps) => {
       return product ? setProductToUpdated(product) : setProductToUpdated(null);
     },
     selectToDelete(isSelected) {
-      console.log(isSelectedToDelete);
-      return isSelected ? setIsSelectedToDelete(true) : setIsSelectedToDelete(false);
+      return setIsSelectedToDelete(isSelected);
     },
     updateProductsToDelete(productId) {
       if (!productId) {

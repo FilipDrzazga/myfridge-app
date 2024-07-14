@@ -1,4 +1,4 @@
-import React, { useEffect, useContext } from "react";
+import React, { useEffect, useContext, useMemo } from "react";
 import { StyleSheet, Pressable } from "react-native";
 import { AppContext } from "../context/AppContext";
 import Animated, { useAnimatedStyle, useSharedValue, withDelay, withTiming, runOnJS } from "react-native-reanimated";
@@ -34,17 +34,32 @@ const OpenModalBtn = () => {
     };
   });
 
-  const AddBtnGesture = Gesture.Tap()
-    .maxDuration(99999999)
-    .onBegin(() => {
-      if (!ctx.isSelectedToDelete) {
-        runOnJS(ctx.setModalVisible)();
-      } else if (ctx.isSelectedToDelete) {
-        runOnJS(ctx.dispatch)({ type: "UPDATE_PRODUCT", payload: { action: "resetSelection" } });
-        runOnJS(ctx.updateProductsToDelete)();
+  const addBtnGesture = useMemo(() => {
+    return Gesture.Tap()
+      .maxDuration(99999999)
+      .onBegin(() => {
+        if (!ctx.isSelectedToDelete) {
+          runOnJS(ctx.setModalVisible)();
+        } else if (ctx.isSelectedToDelete) {
+          runOnJS(ctx.dispatch)({ type: "UPDATE_PRODUCT", payload: { action: "resetSelection" } });
+          runOnJS(ctx.updateProductsToDelete)();
+          runOnJS(ctx.selectToDelete)(false);
+        }
+      });
+  }, [ctx.isSelectedToDelete, ctx.isModalVisible]);
+
+  const reamoveBtnGesture = useMemo(() => {
+    return Gesture.Tap()
+      .maxDuration(99999999)
+      .onBegin(() => {
+        if (ctx.isSelectedToDelete) {
+          runOnJS(ctx.dispatch)({ type: "REMOVE_PRODUCT" });
+        }
+      })
+      .onEnd(() => {
         runOnJS(ctx.selectToDelete)(false);
-      }
-    });
+      });
+  }, [ctx.isSelectedToDelete]);
 
   useEffect(() => {
     if (ctx.state.every((obj) => obj.isSelected === false)) {
@@ -64,11 +79,13 @@ const OpenModalBtn = () => {
   return (
     <Animated.View style={[styles.container, animatedContainerStyleOnDelete]}>
       {ctx.isSelectedToDelete && (
-        <AnimatedPressableBtn style={[styles.removeProductBtn, animatedRemoveBtnOnDelete]}>
-          <Ionicons name="trash-outline" color={GlobalStyle.colors.button.icon} size={40} />
-        </AnimatedPressableBtn>
+        <GestureDetector gesture={reamoveBtnGesture}>
+          <AnimatedPressableBtn style={[styles.removeProductBtn, animatedRemoveBtnOnDelete]}>
+            <Ionicons name="trash-outline" color={GlobalStyle.colors.button.icon} size={40} />
+          </AnimatedPressableBtn>
+        </GestureDetector>
       )}
-      <GestureDetector gesture={AddBtnGesture}>
+      <GestureDetector gesture={addBtnGesture}>
         <AnimatedPressableBtn style={[styles.button, animatedAddBtnOnDelete]}>
           <Ionicons name="add-outline" color={GlobalStyle.colors.button.icon} size={50} />
         </AnimatedPressableBtn>
