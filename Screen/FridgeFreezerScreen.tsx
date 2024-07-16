@@ -1,6 +1,5 @@
 import React, { useEffect, useContext } from "react";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
-import { StyleSheet } from "react-native";
 import { useFonts } from "expo-font";
 
 import { AppContext } from "../context/AppContext";

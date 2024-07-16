@@ -3,7 +3,7 @@ import Svg, { Path, Circle } from "react-native-svg";
 
 interface Props {
   color?: string;
-  focused: boolean;
+  focused?: boolean;
 }
 
 const FridgeSmall = (props: Props) => (
