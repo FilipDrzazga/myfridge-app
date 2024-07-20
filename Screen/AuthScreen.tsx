@@ -9,18 +9,22 @@ import Animated, {
   type SharedValue,
 } from "react-native-reanimated";
 import Ionicons from "@expo/vector-icons/Ionicons";
+import { type NativeStackScreenProps } from "@react-navigation/native-stack";
 
 import OnBoardingShorts from "../components/OnBoardingShorts";
 import GlobalStyle from "../style/GlobalStyle";
 import CustomText from "../components/CustomText";
 import ONBOARDING_SHORTS from "../constants/ONBOARDING_SHORTS";
 import ICONS_BACKGROUND from "../constants/ICONS_BACKGROUND";
+import { RootStackParams } from "../navigation/AuthStackNavigation";
 
 const WIDTH = Dimensions.get("screen").width;
 
 interface IndicatorProps {
   scrollX: SharedValue<number>;
 }
+
+type AuthScreenProps = NativeStackScreenProps<RootStackParams, "SignIn", "SignUp">;
 
 const Indicator = ({ scrollX }: IndicatorProps) => {
   return (
@@ -31,7 +35,12 @@ const Indicator = ({ scrollX }: IndicatorProps) => {
             extrapolateLeft: Extrapolation.CLAMP,
             extrapolateRight: Extrapolation.CLAMP,
           });
+          const opacity = interpolate(scrollX.value, [(i - 1) * WIDTH, i * WIDTH, (i + 1) * WIDTH], [0.6, 1, 0.6], {
+            extrapolateLeft: Extrapolation.CLAMP,
+            extrapolateRight: Extrapolation.CLAMP,
+          });
           return {
+            opacity: opacity,
             transform: [{ scale: scale }],
           };
         });
@@ -40,15 +49,15 @@ const Indicator = ({ scrollX }: IndicatorProps) => {
     </View>
   );
 };
-
-const AuthScreen = () => {
+``;
+const AuthScreen = ({ navigation }: AuthScreenProps) => {
   const scrollX = useSharedValue(0);
 
   return (
     <View style={styles.container}>
       <View style={styles.backgroundIcons}>
-        {ICONS_BACKGROUND.map((icon) => (
-          <Ionicons name={icon.name} size={icon.size} color={icon.color} />
+        {ICONS_BACKGROUND.map((icon, id) => (
+          <Ionicons key={`icons-${id}`} name={icon.name} size={icon.size} color={icon.color} />
         ))}
       </View>
       <View style={styles.logoTxt}>
@@ -73,7 +82,7 @@ const AuthScreen = () => {
           <Indicator scrollX={scrollX} />
         </View>
         <View style={styles.btnContainer}>
-          <Pressable style={styles.signUpBtn}>
+          <Pressable onPress={() => navigation.navigate("SignUp")} style={styles.signUpBtn}>
             <CustomText
               additionalStyle={{ letterSpacing: 3 }}
               fontType="PoppinsRegular"
@@ -83,7 +92,7 @@ const AuthScreen = () => {
               SIGN UP
             </CustomText>
           </Pressable>
-          <Pressable style={styles.loginBtn}>
+          <Pressable onPress={() => navigation.navigate("SignIn")} style={styles.loginBtn}>
             <CustomText
               additionalStyle={{ letterSpacing: 3 }}
               fontType="PoppinsRegular"
@@ -137,8 +146,8 @@ const styles = StyleSheet.create({
   },
   modal: {
     justifyContent: "center",
-    width: "100%",
-    height: "55%",
+    width: WIDTH,
+    height: 600,
     borderTopLeftRadius: 50,
     borderTopRightRadius: 50,
     backgroundColor: GlobalStyle.colors.black,

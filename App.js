@@ -5,15 +5,16 @@ import BottomTabNavigation from "./navigation/BottomTabNavigation";
 import AuthScreen from "./screen/AuthScreen";
 
 import AppContextProvider from "./context/AppContext";
+import AuthStackNavigation from "./navigation/AuthStackNavigation";
 
 export default function App() {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <AppContextProvider>
-        <AuthScreen />
-        {/* <NavigationContainer>
-          <BottomTabNavigation />
-        </NavigationContainer> */}
+        <NavigationContainer>
+          <AuthStackNavigation />
+          {/* <BottomTabNavigation /> */}
+        </NavigationContainer>
       </AppContextProvider>
     </GestureHandlerRootView>
   );

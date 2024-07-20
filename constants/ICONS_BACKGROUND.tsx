@@ -3,7 +3,13 @@ import GlobalStyle from "../style/GlobalStyle";
 const ICON_COLOR = GlobalStyle.colors.black;
 const ICON_SIZE = 60;
 
-const ICONS_BACKGROUND = [
+type ICONS = {
+  name: "beer-outline" | "beer" | "pizza" | "pizza-outline" | "fast-food-outline" | "fast-food";
+  size: number;
+  color: string;
+};
+
+const ICONS_BACKGROUND: ICONS[] = [
   { name: "beer-outline", size: ICON_SIZE, color: ICON_COLOR },
   { name: "pizza", size: ICON_SIZE, color: ICON_COLOR },
   { name: "fast-food-outline", size: ICON_SIZE, color: ICON_COLOR },
