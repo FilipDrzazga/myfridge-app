@@ -1,6 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { StyleSheet, View, Text, Keyboard } from "react-native";
-import Animated, { useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
+import Animated, {
+  useAnimatedStyle,
+  useAnimatedKeyboard,
+  useSharedValue,
+  withTiming,
+  ZoomInLeft,
+  ZoomIn,
+  ZoomInDown,
+} from "react-native-reanimated";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { useFormik } from "formik";
 
@@ -13,7 +21,6 @@ import CustomButton from "../components/CustomButton";
 
 const SignUpScreen = () => {
   const [keyboardStatus, setKeyboardStatus] = useState("");
-  console.log(keyboardStatus);
 
   const formik = useFormik({
     initialValues: {
@@ -28,11 +35,13 @@ const SignUpScreen = () => {
     validateOnBlur: false,
   });
 
+  const keyboard = useAnimatedKeyboard({ isStatusBarTranslucentAndroid: true });
   const modalHeight = useSharedValue(600);
   const borderRadius = useSharedValue(50);
 
   const animatedModalHeight = useAnimatedStyle(() => {
     return {
+      transform: [{ translateY: -keyboard.height.value + 39 }],
       height: modalHeight.value,
       borderTopRightRadius: borderRadius.value,
       borderTopLeftRadius: borderRadius.value,
@@ -73,7 +82,7 @@ const SignUpScreen = () => {
         </CustomText>
       </View>
       <Animated.View style={[styles.modal, animatedModalHeight]}>
-        <View style={styles.createAccountTxtContainer}>
+        <Animated.View entering={ZoomInLeft.delay(100)} style={styles.createAccountTxtContainer}>
           <CustomText fontSize={45} fontType="PoppinsBold" color={GlobalStyle.colors.screen.background}>
             Create account
           </CustomText>
@@ -85,9 +94,9 @@ const SignUpScreen = () => {
           >
             Join to your digital fridge now.
           </CustomText>
-        </View>
+        </Animated.View>
         <View style={styles.inputsContainer}>
-          <View style={styles.inputContainer}>
+          <Animated.View entering={ZoomIn.delay(200)} style={styles.inputContainer}>
             <CustomInput
               inputValue={formik.values.email}
               formikOnChange={formik.handleChange("email")}
@@ -100,8 +109,8 @@ const SignUpScreen = () => {
               textFontType={"PoppinsLight"}
             />
             <Text style={styles.errors}>{formik.errors.email}</Text>
-          </View>
-          <View style={styles.inputContainer}>
+          </Animated.View>
+          <Animated.View entering={ZoomIn.delay(300)} style={styles.inputContainer}>
             <CustomInput
               inputValue={formik.values.password}
               formikOnChange={formik.handleChange("password")}
@@ -118,36 +127,38 @@ const SignUpScreen = () => {
               <Text style={styles.errors}>{formik.errors.password}</Text>
               <Text style={styles.forgotPassword}>Forgot Password?</Text>
             </View>
-          </View>
+          </Animated.View>
         </View>
-        <CustomButton
-          onPress={formik.handleSubmit}
-          title="Create account"
-          fontSize={20}
-          additionalStyle={styles.createAccountBtn}
-        />
-        <View style={styles.separatorContainer}>
-          <View style={styles.separator} />
-          <View>
-            <CustomText
-              additionalStyle={{ width: 150, textAlign: "center" }}
-              fontSize={16}
-              fontType="PoppinsLight"
-              color={GlobalStyle.colors.screen.background}
-            >
-              Or create with
-            </CustomText>
+        <Animated.View entering={ZoomInDown.delay(350)} style={styles.buttonsContainer}>
+          <CustomButton
+            onPress={formik.handleSubmit}
+            title="Create account"
+            fontSize={20}
+            additionalStyle={styles.createAccountBtn}
+          />
+          <View style={styles.separatorContainer}>
+            <View style={styles.separator} />
+            <View>
+              <CustomText
+                additionalStyle={{ width: 150, textAlign: "center" }}
+                fontSize={16}
+                fontType="PoppinsLight"
+                color={GlobalStyle.colors.screen.background}
+              >
+                Or create with
+              </CustomText>
+            </View>
+            <View style={styles.separator} />
           </View>
-          <View style={styles.separator} />
-        </View>
-        <CustomButton
-          iconName="logo-google"
-          iconSize={30}
-          onPress={formik.handleSubmit}
-          title="oogle"
-          fontSize={20}
-          additionalStyle={styles.createAccountGoogleBtn}
-        />
+          <CustomButton
+            iconName="logo-google"
+            iconSize={30}
+            onPress={formik.handleSubmit}
+            title="oogle"
+            fontSize={20}
+            additionalStyle={styles.createAccountGoogleBtn}
+          />
+        </Animated.View>
       </Animated.View>
     </View>
   );
@@ -190,12 +201,12 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 50,
     borderTopRightRadius: 50,
   },
-  createAccountTxtContainer: { width: "90%", paddingLeft: 20, marginTop: 10 },
+  createAccountTxtContainer: { width: "90%", paddingLeft: 20, marginTop: -5 },
   inputsContainer: {
     width: "90%",
     justifyContent: "center",
     alignItems: "center",
-    gap: 10,
+    gap: 5,
   },
   inputContainer: { width: "100%", gap: 10 },
   emailInput: {
@@ -238,6 +249,14 @@ const styles = StyleSheet.create({
     fontWeight: "regular",
     color: GlobalStyle.colors.screen.background,
   },
+  buttonsContainer: {
+    flexDirection: "column",
+    justifyContent: "space-between",
+    alignItems: "center",
+    width: "100%",
+    height: 200,
+    gap: 10,
+  },
   createAccountBtn: {
     width: "90%",
     height: 70,
@@ -246,7 +265,7 @@ const styles = StyleSheet.create({
     backgroundColor: GlobalStyle.colors.yellow,
     borderRadius: 15,
   },
-  separatorContainer: { flexDirection: "row", alignItems: "center", width: "90%", marginTop: -40 },
+  separatorContainer: { flexDirection: "row", alignItems: "center", width: "90%" },
   separator: { flex: 1, height: 1, backgroundColor: GlobalStyle.colors.screen.background },
   createAccountGoogleBtn: {
     width: "90%",
@@ -254,7 +273,6 @@ const styles = StyleSheet.create({
     flexDirection: "row-reverse",
     justifyContent: "center",
     alignItems: "center",
-    marginTop: -40,
     backgroundColor: GlobalStyle.colors.pink,
     borderRadius: 15,
   },
