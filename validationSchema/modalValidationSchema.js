@@ -8,3 +8,13 @@ export const validationSchema = Yup.object().shape({
   boughtDate: Yup.number().required("*required"),
   expiryDate: Yup.number().required("*required"),
 });
+export const signUpSchema = Yup.object().shape({
+  email: Yup.string().email("*Invalid email address").required("*Email is required"),
+  password: Yup.string()
+    .min(8, "*At least 8 characters")
+    .matches(/[a-z]/, "*At least one lowercase letter")
+    .matches(/[A-Z]/, "*At least one uppercase letter")
+    .matches(/[0-9]/, "*At least one number")
+    .matches(/[@$!%*?&]/, "*At least one special character")
+    .required("*Password is required"),
+});
