@@ -1,5 +1,5 @@
 import React from "react";
-import { Pressable, StyleSheet, View, Dimensions } from "react-native";
+import { Pressable, StyleSheet, View, Dimensions, type ViewToken } from "react-native";
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
@@ -52,6 +52,7 @@ const Indicator = ({ scrollX }: IndicatorProps) => {
 ``;
 const AuthScreen = ({ navigation }: AuthScreenProps) => {
   const scrollX = useSharedValue(0);
+  const isViewableItem = useSharedValue<ViewToken[]>([]);
 
   return (
     <View style={styles.container}>
@@ -69,8 +70,8 @@ const AuthScreen = ({ navigation }: AuthScreenProps) => {
         <View style={styles.onBoardingContainer}>
           <Animated.FlatList
             data={ONBOARDING_SHORTS}
-            keyExtractor={(item) => item.id.toString()}
-            renderItem={({ item }) => <OnBoardingShorts scrollX={scrollX} text={item.short} />}
+            keyExtractor={(item) => item.short}
+            renderItem={(item) => <OnBoardingShorts item={item} scrollX={scrollX} />}
             horizontal={true}
             showsHorizontalScrollIndicator={false}
             scrollEventThrottle={32}

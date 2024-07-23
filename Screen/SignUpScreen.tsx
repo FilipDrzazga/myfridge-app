@@ -207,7 +207,7 @@ const styles = StyleSheet.create({
     width: "90%",
     justifyContent: "center",
     alignItems: "center",
-    gap: 20,
+    gap: 10,
   },
   inputContainer: { width: "100%", gap: 10 },
   emailInput: {
