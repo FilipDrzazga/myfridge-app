@@ -3,8 +3,10 @@ import { Text } from "react-native";
 import { useFonts } from "expo-font";
 
 import GlobalStyle from "../style/GlobalStyle";
+import { FunctionBody } from "typescript";
 
 interface Props {
+  onPress?: () => void;
   fontType: string;
   fontSize: number;
   color?: string;
@@ -12,7 +14,14 @@ interface Props {
   additionalStyle?: { [key: string | number]: any };
 }
 
-const CustomText = ({ fontType, fontSize, color = GlobalStyle.colors.black, children, additionalStyle }: Props) => {
+const CustomText = ({
+  onPress,
+  fontType,
+  fontSize,
+  color = GlobalStyle.colors.black,
+  children,
+  additionalStyle,
+}: Props) => {
   const [fontsLoaded, fontError] = useFonts({
     PoppinsLight: require("../assets/font/Poppins-Light.ttf"),
     PoppinsRegular: require("../assets/font/Poppins-Regular.ttf"),
@@ -23,6 +32,13 @@ const CustomText = ({ fontType, fontSize, color = GlobalStyle.colors.black, chil
     return null;
   }
 
-  return <Text style={{ fontFamily: fontType, color: color, fontSize: fontSize, ...additionalStyle }}>{children}</Text>;
+  return (
+    <Text
+      onPress={() => onPress()}
+      style={{ fontFamily: fontType, color: color, fontSize: fontSize, ...additionalStyle }}
+    >
+      {children}
+    </Text>
+  );
 };
 export default CustomText;

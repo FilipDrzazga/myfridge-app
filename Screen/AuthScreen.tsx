@@ -1,5 +1,5 @@
 import React from "react";
-import { Pressable, StyleSheet, View, Dimensions, type ViewToken } from "react-native";
+import { Pressable, StyleSheet, View, Dimensions } from "react-native";
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
@@ -52,7 +52,6 @@ const Indicator = ({ scrollX }: IndicatorProps) => {
 ``;
 const AuthScreen = ({ navigation }: AuthScreenProps) => {
   const scrollX = useSharedValue(0);
-  const isViewableItem = useSharedValue<ViewToken[]>([]);
 
   return (
     <View style={styles.container}>
@@ -83,7 +82,10 @@ const AuthScreen = ({ navigation }: AuthScreenProps) => {
           <Indicator scrollX={scrollX} />
         </View>
         <View style={styles.btnContainer}>
-          <Pressable onPress={() => navigation.navigate("SignUp")} style={styles.signUpBtn}>
+          <Pressable
+            onPress={() => navigation.navigate("SignUp", { fromScreen: "AuthScreen" })}
+            style={styles.signUpBtn}
+          >
             <CustomText
               additionalStyle={{ letterSpacing: 3 }}
               fontType="PoppinsRegular"
@@ -93,7 +95,10 @@ const AuthScreen = ({ navigation }: AuthScreenProps) => {
               SIGN UP
             </CustomText>
           </Pressable>
-          <Pressable onPress={() => navigation.navigate("SignIn")} style={styles.loginBtn}>
+          <Pressable
+            onPress={() => navigation.navigate("SignIn", { fromScreen: "AuthScreen" })}
+            style={styles.loginBtn}
+          >
             <CustomText
               additionalStyle={{ letterSpacing: 3 }}
               fontType="PoppinsRegular"

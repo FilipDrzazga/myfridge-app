@@ -7,8 +7,8 @@ import AuthScreen from "../screen/AuthScreen";
 
 export type RootStackParams = {
   AuthScreen: undefined;
-  SignUp: undefined;
-  SignIn: undefined;
+  SignUp: { fromScreen: string };
+  SignIn: { fromScreen: string };
   Password: undefined;
 };
 
@@ -18,14 +18,7 @@ const AuthStackNavigation = () => {
   return (
     <Stack.Navigator initialRouteName="AuthScreen" screenOptions={{ headerShown: false }}>
       <Stack.Screen name="AuthScreen" component={AuthScreen} />
-      <Stack.Screen
-        name="SignUp"
-        component={SignUpScreen}
-        options={{
-          gestureEnabled: false,
-          animation: "none",
-        }}
-      />
+      <Stack.Screen name="SignUp" component={SignUpScreen} />
       <Stack.Screen name="SignIn" component={SignInScreen} />
       <Stack.Screen name="Password" component={PasswordScreen} />
     </Stack.Navigator>

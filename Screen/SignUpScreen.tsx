@@ -8,9 +8,12 @@ import Animated, {
   ZoomInLeft,
   ZoomIn,
   ZoomInDown,
+  FadeOut,
 } from "react-native-reanimated";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { useFormik } from "formik";
+import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import uuid from "react-native-uuid";
 
 import GlobalStyle from "../style/GlobalStyle";
 import CustomText from "../components/CustomText";
@@ -18,9 +21,13 @@ import ICONS_BACKGROUND from "../constants/ICONS_BACKGROUND";
 import CustomInput from "../components/CustomInput";
 import { AuthSchema } from "../validationSchema/modalValidationSchema";
 import CustomButton from "../components/CustomButton";
+import { type RootStackParams } from "../navigation/AuthStackNavigation";
 
-const SignUpScreen = () => {
+type AuthScreenProps = NativeStackScreenProps<RootStackParams, "SignIn">;
+
+const SignUpScreen = ({ navigation, route }: AuthScreenProps) => {
   const [keyboardStatus, setKeyboardStatus] = useState("");
+  const { fromScreen } = route.params;
 
   const formik = useFormik({
     initialValues: {
@@ -36,7 +43,7 @@ const SignUpScreen = () => {
   });
 
   const keyboard = useAnimatedKeyboard({ isStatusBarTranslucentAndroid: true });
-  const modalHeight = useSharedValue(500);
+  const modalHeight = useSharedValue(fromScreen === "AuthScreen" ? 500 : 870);
   const borderRadius = useSharedValue(50);
 
   const animatedModalHeight = useAnimatedStyle(() => {
@@ -54,7 +61,7 @@ const SignUpScreen = () => {
     } else if (keyboardStatus === "Keyboard Hidden") {
       borderRadius.value = withTiming(50);
     }
-    modalHeight.value = withTiming(800);
+    modalHeight.value = withTiming(870);
 
     const showSubscription = Keyboard.addListener("keyboardDidShow", () => {
       setKeyboardStatus("Keyboard Shown");
@@ -82,7 +89,11 @@ const SignUpScreen = () => {
         </CustomText>
       </View>
       <Animated.View style={[styles.modal, animatedModalHeight]}>
-        <Animated.View entering={ZoomInLeft.delay(100)} style={styles.createAccountTxtContainer}>
+        <Animated.View
+          key={uuid.v4().toString()}
+          entering={ZoomInLeft.delay(100)}
+          style={styles.createAccountTxtContainer}
+        >
           <CustomText fontSize={45} fontType="PoppinsBold" color={GlobalStyle.colors.screen.background}>
             Create account.
           </CustomText>
@@ -96,7 +107,7 @@ const SignUpScreen = () => {
           </CustomText>
         </Animated.View>
         <View style={styles.inputsContainer}>
-          <Animated.View entering={ZoomIn.delay(200)} style={styles.inputContainer}>
+          <Animated.View key={uuid.v4().toString()} entering={ZoomIn.delay(200)} style={styles.inputContainer}>
             <CustomInput
               inputValue={formik.values.email}
               formikOnChange={formik.handleChange("email")}
@@ -110,7 +121,7 @@ const SignUpScreen = () => {
             />
             <Text style={styles.errors}>{formik.errors.email}</Text>
           </Animated.View>
-          <Animated.View entering={ZoomIn.delay(300)} style={styles.inputContainer}>
+          <Animated.View key={uuid.v4().toString()} entering={ZoomIn.delay(300)} style={styles.inputContainer}>
             <CustomInput
               inputValue={formik.values.password}
               formikOnChange={formik.handleChange("password")}
@@ -123,14 +134,10 @@ const SignUpScreen = () => {
               additionalTextStyle={{ paddingLeft: 20, marginBottom: -10 }}
               textFontType={"PoppinsLight"}
             />
-            {/* <View style={styles.forgotPasswordAndErrorContainer}>
-              <Text style={styles.errors}>{formik.errors.password}</Text>
-              <Text style={styles.forgotPassword}>Forgot Password?</Text>
-            </View> */}
             <Text style={styles.errors}>{formik.errors.password}</Text>
           </Animated.View>
         </View>
-        <Animated.View entering={ZoomInDown.delay(350)} style={styles.buttonsContainer}>
+        <Animated.View key={uuid.v4().toString()} entering={ZoomInDown.delay(350)} style={styles.buttonsContainer}>
           <CustomButton
             onPress={formik.handleSubmit}
             title="Create account"
@@ -160,6 +167,19 @@ const SignUpScreen = () => {
             additionalStyle={styles.createAccountGoogleBtn}
           />
         </Animated.View>
+        <View style={{ width: "90%", justifyContent: "center", alignItems: "center", flexDirection: "row", gap: 10 }}>
+          <CustomText fontType="PoppinsRegular" fontSize={18} color={GlobalStyle.colors.screen.background}>
+            Do you have an account?
+          </CustomText>
+          <CustomText
+            onPress={() => navigation.navigate("SignIn", { fromScreen: "SignUp" })}
+            fontType="PoppinsRegular"
+            fontSize={18}
+            color={GlobalStyle.colors.yellow}
+          >
+            Sign in
+          </CustomText>
+        </View>
       </Animated.View>
     </View>
   );
