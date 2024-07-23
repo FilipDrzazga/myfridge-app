@@ -36,7 +36,7 @@ const SignUpScreen = () => {
   });
 
   const keyboard = useAnimatedKeyboard({ isStatusBarTranslucentAndroid: true });
-  const modalHeight = useSharedValue(600);
+  const modalHeight = useSharedValue(500);
   const borderRadius = useSharedValue(50);
 
   const animatedModalHeight = useAnimatedStyle(() => {
@@ -123,10 +123,11 @@ const SignUpScreen = () => {
               additionalTextStyle={{ paddingLeft: 20, marginBottom: -10 }}
               textFontType={"PoppinsLight"}
             />
-            <View style={styles.forgotPasswordAndErrorContainer}>
+            {/* <View style={styles.forgotPasswordAndErrorContainer}>
               <Text style={styles.errors}>{formik.errors.password}</Text>
               <Text style={styles.forgotPassword}>Forgot Password?</Text>
-            </View>
+            </View> */}
+            <Text style={styles.errors}>{formik.errors.password}</Text>
           </Animated.View>
         </View>
         <Animated.View entering={ZoomInDown.delay(350)} style={styles.buttonsContainer}>
@@ -196,7 +197,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     gap: 60,
     width: "100%",
-    paddingTop: 30,
+    paddingTop: 40,
     backgroundColor: GlobalStyle.colors.black,
     borderTopLeftRadius: 50,
     borderTopRightRadius: 50,
@@ -206,7 +207,7 @@ const styles = StyleSheet.create({
     width: "90%",
     justifyContent: "center",
     alignItems: "center",
-    gap: 5,
+    gap: 20,
   },
   inputContainer: { width: "100%", gap: 10 },
   emailInput: {
@@ -235,20 +236,20 @@ const styles = StyleSheet.create({
     paddingLeft: 20,
     backgroundColor: "transparent",
   },
-  forgotPasswordAndErrorContainer: {
-    width: "100%",
-    justifyContent: "space-between",
-    alignItems: "center",
-    flexDirection: "row",
-  },
-  errors: { width: "50%", color: "#ee313b", paddingLeft: 30 },
-  forgotPassword: {
-    width: "50%",
-    paddingLeft: 60,
-    fontSize: 16,
-    fontWeight: "regular",
-    color: GlobalStyle.colors.screen.background,
-  },
+  // forgotPasswordAndErrorContainer: {
+  //   width: "100%",
+  //   justifyContent: "space-between",
+  //   alignItems: "center",
+  //   flexDirection: "row",
+  // },
+  errors: { width: "50%", color: "#ee313b", paddingLeft: 30, marginTop: -5 },
+  // forgotPassword: {
+  //   width: "50%",
+  //   paddingLeft: 60,
+  //   fontSize: 16,
+  //   fontWeight: "regular",
+  //   color: GlobalStyle.colors.screen.background,
+  // },
   buttonsContainer: {
     flexDirection: "column",
     justifyContent: "space-between",

@@ -70,7 +70,7 @@ const AuthScreen = ({ navigation }: AuthScreenProps) => {
           <Animated.FlatList
             data={ONBOARDING_SHORTS}
             keyExtractor={(item) => item.id.toString()}
-            renderItem={({ item }) => <OnBoardingShorts text={item.short} />}
+            renderItem={({ item }) => <OnBoardingShorts scrollX={scrollX} text={item.short} />}
             horizontal={true}
             showsHorizontalScrollIndicator={false}
             scrollEventThrottle={32}
@@ -113,10 +113,10 @@ export default AuthScreen;
 const styles = StyleSheet.create({
   indicatorContainer: {
     width: "50%",
-    height: "40%",
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
+    marginTop: 20,
     gap: 20,
   },
   indicators: { height: 20, width: 20, borderRadius: 25, backgroundColor: GlobalStyle.colors.screen.background },
@@ -147,7 +147,7 @@ const styles = StyleSheet.create({
   modal: {
     justifyContent: "center",
     width: WIDTH,
-    height: 600,
+    height: 500,
     borderTopLeftRadius: 50,
     borderTopRightRadius: 50,
     backgroundColor: GlobalStyle.colors.black,
@@ -157,9 +157,11 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     justifyContent: "center",
     alignItems: "center",
+    gap: 20,
+    paddingTop: 60,
   },
   btnContainer: {
-    flex: 1,
+    flex: 2,
     gap: 20,
     justifyContent: "center",
     alignItems: "center",
@@ -168,16 +170,16 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     width: "90%",
-    height: 80,
-    borderRadius: 50,
-    backgroundColor: GlobalStyle.colors.screen.background,
+    height: 70,
+    borderRadius: 15,
+    backgroundColor: GlobalStyle.colors.yellow,
   },
   loginBtn: {
     justifyContent: "center",
     alignItems: "center",
     width: "90%",
-    height: 80,
-    borderRadius: 50,
+    height: 70,
+    borderRadius: 15,
     backgroundColor: "transparent",
     borderWidth: 2,
     borderColor: GlobalStyle.colors.screen.background,
