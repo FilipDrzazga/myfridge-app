@@ -16,7 +16,7 @@ import GlobalStyle from "../style/GlobalStyle";
 import CustomText from "../components/CustomText";
 import ICONS_BACKGROUND from "../constants/ICONS_BACKGROUND";
 import CustomInput from "../components/CustomInput";
-import { signUpSchema } from "../validationSchema/modalValidationSchema";
+import { AuthSchema } from "../validationSchema/modalValidationSchema";
 import CustomButton from "../components/CustomButton";
 
 const SignUpScreen = () => {
@@ -27,7 +27,7 @@ const SignUpScreen = () => {
       email: "",
       password: "",
     },
-    validationSchema: signUpSchema,
+    validationSchema: AuthSchema,
     onSubmit: (values, actions) => {
       console.log(values);
     },
@@ -84,7 +84,7 @@ const SignUpScreen = () => {
       <Animated.View style={[styles.modal, animatedModalHeight]}>
         <Animated.View entering={ZoomInLeft.delay(100)} style={styles.createAccountTxtContainer}>
           <CustomText fontSize={45} fontType="PoppinsBold" color={GlobalStyle.colors.screen.background}>
-            Create account
+            Create account.
           </CustomText>
           <CustomText
             additionalStyle={{ marginTop: -20 }}
@@ -236,20 +236,7 @@ const styles = StyleSheet.create({
     paddingLeft: 20,
     backgroundColor: "transparent",
   },
-  // forgotPasswordAndErrorContainer: {
-  //   width: "100%",
-  //   justifyContent: "space-between",
-  //   alignItems: "center",
-  //   flexDirection: "row",
-  // },
   errors: { width: "50%", color: "#ee313b", paddingLeft: 30, marginTop: -5 },
-  // forgotPassword: {
-  //   width: "50%",
-  //   paddingLeft: 60,
-  //   fontSize: 16,
-  //   fontWeight: "regular",
-  //   color: GlobalStyle.colors.screen.background,
-  // },
   buttonsContainer: {
     flexDirection: "column",
     justifyContent: "space-between",

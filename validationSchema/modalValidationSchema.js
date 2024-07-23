@@ -8,7 +8,7 @@ export const validationSchema = Yup.object().shape({
   boughtDate: Yup.number().required("*required"),
   expiryDate: Yup.number().required("*required"),
 });
-export const signUpSchema = Yup.object().shape({
+export const AuthSchema = Yup.object().shape({
   email: Yup.string().email("*Invalid email address").required("*Email is required"),
   password: Yup.string()
     .min(8, "*At least 8 characters")
