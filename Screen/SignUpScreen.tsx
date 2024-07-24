@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { StyleSheet, View, Text, Keyboard } from "react-native";
 import Animated, {
   useAnimatedStyle,
@@ -8,7 +8,6 @@ import Animated, {
   ZoomInLeft,
   ZoomIn,
   ZoomInDown,
-  FadeOut,
 } from "react-native-reanimated";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { useFormik } from "formik";
@@ -47,8 +46,12 @@ const SignUpScreen = ({ navigation, route }: AuthScreenProps) => {
   const borderRadius = useSharedValue(50);
 
   const animatedModalHeight = useAnimatedStyle(() => {
+    let translateY = 0;
+    if (keyboardStatus === "Keyboard Shown") {
+      translateY = -keyboard.height.value + 109;
+    }
     return {
-      transform: [{ translateY: -keyboard.height.value + 39 }],
+      transform: [{ translateY: translateY }],
       height: modalHeight.value,
       borderTopRightRadius: borderRadius.value,
       borderTopLeftRadius: borderRadius.value,
@@ -89,11 +92,7 @@ const SignUpScreen = ({ navigation, route }: AuthScreenProps) => {
         </CustomText>
       </View>
       <Animated.View style={[styles.modal, animatedModalHeight]}>
-        <Animated.View
-          key={uuid.v4().toString()}
-          entering={ZoomInLeft.delay(100)}
-          style={styles.createAccountTxtContainer}
-        >
+        <Animated.View entering={ZoomInLeft.delay(100)} style={styles.createAccountTxtContainer}>
           <CustomText fontSize={45} fontType="PoppinsBold" color={GlobalStyle.colors.screen.background}>
             Create account.
           </CustomText>
@@ -107,7 +106,7 @@ const SignUpScreen = ({ navigation, route }: AuthScreenProps) => {
           </CustomText>
         </Animated.View>
         <View style={styles.inputsContainer}>
-          <Animated.View key={uuid.v4().toString()} entering={ZoomIn.delay(200)} style={styles.inputContainer}>
+          <Animated.View entering={ZoomIn.delay(200)} style={styles.inputContainer}>
             <CustomInput
               inputValue={formik.values.email}
               formikOnChange={formik.handleChange("email")}
@@ -121,7 +120,7 @@ const SignUpScreen = ({ navigation, route }: AuthScreenProps) => {
             />
             <Text style={styles.errors}>{formik.errors.email}</Text>
           </Animated.View>
-          <Animated.View key={uuid.v4().toString()} entering={ZoomIn.delay(300)} style={styles.inputContainer}>
+          <Animated.View entering={ZoomIn.delay(300)} style={styles.inputContainer}>
             <CustomInput
               inputValue={formik.values.password}
               formikOnChange={formik.handleChange("password")}
@@ -137,7 +136,7 @@ const SignUpScreen = ({ navigation, route }: AuthScreenProps) => {
             <Text style={styles.errors}>{formik.errors.password}</Text>
           </Animated.View>
         </View>
-        <Animated.View key={uuid.v4().toString()} entering={ZoomInDown.delay(350)} style={styles.buttonsContainer}>
+        <Animated.View entering={ZoomInDown.delay(350)} style={styles.buttonsContainer}>
           <CustomButton
             onPress={formik.handleSubmit}
             title="Create account"
@@ -172,7 +171,7 @@ const SignUpScreen = ({ navigation, route }: AuthScreenProps) => {
             Do you have an account?
           </CustomText>
           <CustomText
-            onPress={() => navigation.navigate("SignIn", { fromScreen: "SignUp" })}
+            onPress={() => navigation.replace("SignIn", { fromScreen: "SignUp" })}
             fontType="PoppinsRegular"
             fontSize={18}
             color={GlobalStyle.colors.yellow}
