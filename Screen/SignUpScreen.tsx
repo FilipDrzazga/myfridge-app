@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect } from "react";
 import { StyleSheet, View, Text, Keyboard } from "react-native";
 import Animated, {
   useAnimatedStyle,
@@ -12,13 +12,13 @@ import Animated, {
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { useFormik } from "formik";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import uuid from "react-native-uuid";
+import { FIREBASE_AUTH, createUserWithEmailAndPassword } from "../firebase/firebaseConfig";
 
 import GlobalStyle from "../style/GlobalStyle";
 import CustomText from "../components/CustomText";
 import ICONS_BACKGROUND from "../constants/ICONS_BACKGROUND";
 import CustomInput from "../components/CustomInput";
-import { AuthSchema } from "../validationSchema/modalValidationSchema";
+import { SignUpSchema } from "../validationSchema/modalValidationSchema";
 import CustomButton from "../components/CustomButton";
 import { type RootStackParams } from "../navigation/AuthStackNavigation";
 
@@ -28,22 +28,36 @@ const SignUpScreen = ({ navigation, route }: AuthScreenProps) => {
   const [keyboardStatus, setKeyboardStatus] = useState("");
   const { fromScreen } = route.params;
 
+  const keyboard = useAnimatedKeyboard({ isStatusBarTranslucentAndroid: true });
+  const modalHeight = useSharedValue(fromScreen === "AuthScreen" ? 500 : 870);
+  const borderRadius = useSharedValue(50);
+
   const formik = useFormik({
     initialValues: {
       email: "",
       password: "",
     },
-    validationSchema: AuthSchema,
+    validationSchema: SignUpSchema,
     onSubmit: (values, actions) => {
-      console.log(values);
+      if (values) {
+        Keyboard.dismiss();
+        createUserWithEmailAndPassword(FIREBASE_AUTH, values.email, values.password)
+          .then((userCredential) => {
+            // Signed up
+            console.log(userCredential.user);
+            const user = userCredential.user;
+            // ...
+          })
+          .catch((error) => {
+            const errorCode = error.code;
+            const errorMessage = error.message;
+            // ..
+          });
+      }
     },
     validateOnChange: false,
     validateOnBlur: false,
   });
-
-  const keyboard = useAnimatedKeyboard({ isStatusBarTranslucentAndroid: true });
-  const modalHeight = useSharedValue(fromScreen === "AuthScreen" ? 500 : 870);
-  const borderRadius = useSharedValue(50);
 
   const animatedModalHeight = useAnimatedStyle(() => {
     let translateY = 0;
@@ -166,7 +180,7 @@ const SignUpScreen = ({ navigation, route }: AuthScreenProps) => {
             additionalStyle={styles.createAccountGoogleBtn}
           />
         </Animated.View>
-        <View style={{ width: "90%", justifyContent: "center", alignItems: "center", flexDirection: "row", gap: 10 }}>
+        <View style={styles.navigationBtn}>
           <CustomText fontType="PoppinsRegular" fontSize={18} color={GlobalStyle.colors.screen.background}>
             Do you have an account?
           </CustomText>
@@ -283,4 +297,5 @@ const styles = StyleSheet.create({
     backgroundColor: GlobalStyle.colors.pink,
     borderRadius: 15,
   },
+  navigationBtn: { width: "90%", justifyContent: "center", alignItems: "center", flexDirection: "row", gap: 10 },
 });

@@ -18,32 +18,31 @@ import CustomInput from "../components/CustomInput";
 import CustomText from "../components/CustomText";
 import ICONS_BACKGROUND from "../constants/ICONS_BACKGROUND";
 import GlobalStyle from "../style/GlobalStyle";
-import { AuthSchema } from "../validationSchema/modalValidationSchema";
+import { SignInSchema } from "../validationSchema/modalValidationSchema";
 import { type RootStackParams } from "../navigation/AuthStackNavigation";
 
 type AuthScreenProps = NativeStackScreenProps<RootStackParams, "SignUp">;
 
 const SignInScreen = ({ navigation, route }: AuthScreenProps) => {
   const [keyboardStatus, setKeyboardStatus] = useState("");
-
   const { fromScreen } = route.params;
+
+  const keyboard = useAnimatedKeyboard({ isStatusBarTranslucentAndroid: true });
+  const modalHeight = useSharedValue(fromScreen === "AuthScreen" ? 500 : 870);
+  const borderRadius = useSharedValue(50);
 
   const formik = useFormik({
     initialValues: {
       email: "",
       password: "",
     },
-    validationSchema: AuthSchema,
+    validationSchema: SignInSchema,
     onSubmit: (values, actions) => {
       console.log(values);
     },
     validateOnChange: false,
     validateOnBlur: false,
   });
-
-  const keyboard = useAnimatedKeyboard({ isStatusBarTranslucentAndroid: true });
-  const modalHeight = useSharedValue(fromScreen === "AuthScreen" ? 500 : 870);
-  const borderRadius = useSharedValue(50);
 
   const animatedModalHeight = useAnimatedStyle(() => {
     let translateY = 0;
@@ -170,16 +169,7 @@ const SignInScreen = ({ navigation, route }: AuthScreenProps) => {
             additionalStyle={styles.createAccountGoogleBtn}
           />
         </Animated.View>
-        <View
-          style={{
-            width: "90%",
-            justifyContent: "center",
-            alignItems: "center",
-            flexDirection: "row",
-            gap: 10,
-            marginTop: 10,
-          }}
-        >
+        <View style={styles.navigationBtn}>
           <CustomText fontType="PoppinsRegular" fontSize={18} color={GlobalStyle.colors.screen.background}>
             Don't have an account?
           </CustomText>
@@ -309,5 +299,13 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: GlobalStyle.colors.pink,
     borderRadius: 15,
+  },
+  navigationBtn: {
+    width: "90%",
+    justifyContent: "center",
+    alignItems: "center",
+    flexDirection: "row",
+    gap: 10,
+    marginTop: 10,
   },
 });

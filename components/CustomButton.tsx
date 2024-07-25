@@ -3,6 +3,7 @@ import React from "react";
 import Ionicons from "@expo/vector-icons/Ionicons";
 
 import CustomText from "./CustomText";
+import Loader from "./Loader";
 
 interface CustomButtonProps {
   title?: string;
@@ -47,11 +48,12 @@ const CustomButton = ({
       onPress={handleOnPress}
       style={{ ...additionalStyle, opacity: isDisabled ? 0.3 : 1 }}
     >
-      {title && (
+      <Loader />
+      {/* {title && (
         <CustomText fontType="PoppinsRegular" fontSize={fontSize} color={fontColor}>
           {title}
         </CustomText>
-      )}
+      )} */}
       {iconName && <Ionicons name={iconName} size={iconSize} color={iconColor} />}
     </Pressable>
   );
