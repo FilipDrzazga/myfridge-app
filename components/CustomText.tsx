@@ -3,7 +3,6 @@ import { Text } from "react-native";
 import { useFonts } from "expo-font";
 
 import GlobalStyle from "../style/GlobalStyle";
-import { FunctionBody } from "typescript";
 
 interface Props {
   onPress?: () => void;
@@ -32,9 +31,13 @@ const CustomText = ({
     return null;
   }
 
+  const handlePress = () => {
+    onPress && onPress();
+  };
+
   return (
     <Text
-      onPress={() => onPress()}
+      onPress={onPress && handlePress}
       style={{ fontFamily: fontType, color: color, fontSize: fontSize, ...additionalStyle }}
     >
       {children}

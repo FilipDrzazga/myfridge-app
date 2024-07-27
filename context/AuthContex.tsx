@@ -5,18 +5,20 @@ type AuthContextProviderProps = {
 };
 
 type ContextValue = {
-  isUserLogin: boolean;
-  setIsUserLogin: React.Dispatch<React.SetStateAction<boolean>>;
+  isUserActive: boolean;
+  activeUser: (isActive: boolean) => void;
 };
 
 export const AuthContext = createContext<ContextValue | null>(null);
 
 const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
-  const [isUserLogin, setIsUserLogin] = useState(false);
+  const [isUserActive, setIsUserActive] = useState(false);
 
   const ctx: ContextValue = {
-    isUserLogin,
-    setIsUserLogin,
+    isUserActive,
+    activeUser(isActive) {
+      return setIsUserActive(isActive);
+    },
   };
 
   return <AuthContext.Provider value={ctx}>{children}</AuthContext.Provider>;

@@ -16,7 +16,7 @@ function BottomTabNavigation() {
       screenOptions={{
         tabBarStyle: {
           backgroundColor: GlobalStyle.colors.tbb.background,
-          height: 80,
+          height: 100,
           borderTopWidth: 0,
           elevation: 0,
           shadowColor: "transparent",

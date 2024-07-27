@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { Keyboard, StyleSheet, Text, View } from "react-native";
 import Animated, {
   ZoomInLeft,
@@ -12,7 +12,9 @@ import Animated, {
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { useFormik } from "formik";
 import { type NativeStackScreenProps } from "@react-navigation/native-stack";
+import { FIREBASE_AUTH, onAuthStateChanged } from "../firebase/firebaseConfig";
 
+import { AuthContext } from "../context/AuthContex";
 import CustomButton from "../components/CustomButton";
 import CustomInput from "../components/CustomInput";
 import CustomText from "../components/CustomText";
@@ -24,6 +26,7 @@ import { type RootStackParams } from "../navigation/AuthStackNavigation";
 type AuthScreenProps = NativeStackScreenProps<RootStackParams, "SignUp">;
 
 const SignInScreen = ({ navigation, route }: AuthScreenProps) => {
+  const ctx = useContext(AuthContext);
   const [keyboardStatus, setKeyboardStatus] = useState("");
   const { fromScreen } = route.params;
 
@@ -38,7 +41,16 @@ const SignInScreen = ({ navigation, route }: AuthScreenProps) => {
     },
     validationSchema: SignInSchema,
     onSubmit: (values, actions) => {
-      console.log(values);
+      onAuthStateChanged(FIREBASE_AUTH, (user) => {
+        if (user) {
+          const uid = user.uid;
+          ctx.activeUser(true);
+          // ...
+        } else {
+          // User is signed out
+          // ...
+        }
+      });
     },
     validateOnChange: false,
     validateOnBlur: false,

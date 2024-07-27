@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-import { StyleSheet, View, Text, Keyboard } from "react-native";
+import { StyleSheet, View, Text, Keyboard, ToastAndroid } from "react-native";
 import Animated, {
   useAnimatedStyle,
   useAnimatedKeyboard,
@@ -14,6 +14,7 @@ import { useFormik } from "formik";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { FIREBASE_AUTH, createUserWithEmailAndPassword } from "../firebase/firebaseConfig";
 
+import { AuthContext } from "../context/AuthContex";
 import GlobalStyle from "../style/GlobalStyle";
 import CustomText from "../components/CustomText";
 import ICONS_BACKGROUND from "../constants/ICONS_BACKGROUND";
@@ -21,7 +22,6 @@ import CustomInput from "../components/CustomInput";
 import { SignUpSchema } from "../validationSchema/modalValidationSchema";
 import CustomButton from "../components/CustomButton";
 import { type RootStackParams } from "../navigation/AuthStackNavigation";
-import { AuthContext } from "../context/AuthContex";
 
 type AuthScreenProps = NativeStackScreenProps<RootStackParams, "SignIn">;
 
@@ -34,6 +34,10 @@ const SignUpScreen = ({ navigation, route }: AuthScreenProps) => {
   const modalHeight = useSharedValue(fromScreen === "AuthScreen" ? 500 : 870);
   const borderRadius = useSharedValue(50);
 
+  const showToast = (message) => {
+    ToastAndroid.showWithGravity(message, ToastAndroid.SHORT, ToastAndroid.CENTER);
+  };
+
   const formik = useFormik({
     initialValues: {
       email: "",
@@ -45,17 +49,11 @@ const SignUpScreen = ({ navigation, route }: AuthScreenProps) => {
         Keyboard.dismiss();
         createUserWithEmailAndPassword(FIREBASE_AUTH, values.email, values.password)
           .then((userCredential) => {
-            // Signed up
-            console.log(userCredential.user);
             const user = userCredential.user;
-            ctx.setIsUserLogin(true);
-
-            // ...
+            ctx.activeUser(true);
           })
           .catch((error) => {
-            const errorCode = error.code;
-            const errorMessage = error.message;
-            // ..
+            showToast("Email already in use.");
           });
       }
     },
