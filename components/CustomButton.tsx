@@ -13,6 +13,7 @@ interface CustomButtonProps {
   iconSize?: number;
   iconColor?: string;
   isDisabled?: boolean;
+  activeLoader?: boolean;
   onPress?: () => void;
   formikOnChange?: (value: React.ChangeEvent<any> | string) => void;
   formikResetForm?: () => void;
@@ -30,6 +31,7 @@ const CustomButton = ({
   iconSize,
   iconColor,
   isDisabled,
+  activeLoader = false,
   additionalStyle,
 }: CustomButtonProps) => {
   const handleOnPress = () => {
@@ -48,12 +50,12 @@ const CustomButton = ({
       onPress={handleOnPress}
       style={{ ...additionalStyle, opacity: isDisabled ? 0.3 : 1 }}
     >
-      <Loader />
-      {/* {title && (
+      {activeLoader && <Loader />}
+      {title && !activeLoader && (
         <CustomText fontType="PoppinsRegular" fontSize={fontSize} color={fontColor}>
           {title}
         </CustomText>
-      )} */}
+      )}
       {iconName && <Ionicons name={iconName} size={iconSize} color={iconColor} />}
     </Pressable>
   );

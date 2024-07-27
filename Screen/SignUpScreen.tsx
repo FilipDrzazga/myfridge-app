@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { StyleSheet, View, Text, Keyboard } from "react-native";
 import Animated, {
   useAnimatedStyle,
@@ -21,10 +21,12 @@ import CustomInput from "../components/CustomInput";
 import { SignUpSchema } from "../validationSchema/modalValidationSchema";
 import CustomButton from "../components/CustomButton";
 import { type RootStackParams } from "../navigation/AuthStackNavigation";
+import { AuthContext } from "../context/AuthContex";
 
 type AuthScreenProps = NativeStackScreenProps<RootStackParams, "SignIn">;
 
 const SignUpScreen = ({ navigation, route }: AuthScreenProps) => {
+  const ctx = useContext(AuthContext);
   const [keyboardStatus, setKeyboardStatus] = useState("");
   const { fromScreen } = route.params;
 
@@ -46,6 +48,8 @@ const SignUpScreen = ({ navigation, route }: AuthScreenProps) => {
             // Signed up
             console.log(userCredential.user);
             const user = userCredential.user;
+            ctx.setIsUserLogin(true);
+
             // ...
           })
           .catch((error) => {
