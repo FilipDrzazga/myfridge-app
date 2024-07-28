@@ -52,11 +52,8 @@ const SignInScreen = ({ navigation, route }: AuthScreenProps) => {
         ctxApp.isLoading(true);
         signInWithEmailAndPassword(FIREBASE_AUTH, values.email, values.password)
           .then((userCredential) => {
-            // Signed in
             ctxAuth.activeUser(true);
             ctxApp.isLoading(false);
-            const user = userCredential.user;
-            // ...
           })
           .catch((error) => {
             showToast(getFriendlyFirebaseAuthErrorMessage(error.code));

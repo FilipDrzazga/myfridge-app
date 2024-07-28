@@ -16,6 +16,7 @@ import { FIREBASE_AUTH, createUserWithEmailAndPassword } from "../firebase/fireb
 
 import { AppContext } from "../context/AppContext";
 import { AuthContext } from "../context/AuthContex";
+import { RealtimeDB } from "../database/realtimeDB";
 import GlobalStyle from "../style/GlobalStyle";
 import CustomText from "../components/CustomText";
 import ICONS_BACKGROUND from "../constants/ICONS_BACKGROUND";
@@ -26,6 +27,7 @@ import { type RootStackParams } from "../navigation/AuthStackNavigation";
 import { getFriendlyFirebaseAuthErrorMessage } from "../helpers";
 
 type AuthScreenProps = NativeStackScreenProps<RootStackParams, "SignIn">;
+const DB = new RealtimeDB();
 
 const SignUpScreen = ({ navigation, route }: AuthScreenProps) => {
   const ctxAuth = useContext(AuthContext);
@@ -53,7 +55,8 @@ const SignUpScreen = ({ navigation, route }: AuthScreenProps) => {
         Keyboard.dismiss();
         createUserWithEmailAndPassword(FIREBASE_AUTH, values.email, values.password)
           .then((userCredential) => {
-            const user = userCredential.user;
+            ctxAuth.getUserId(userCredential.user.uid);
+            DB.createNewUserOnDB(userCredential.user.uid, userCredential.user.email);
             ctxAuth.activeUser(true);
             ctxApp.isLoading(false);
           })

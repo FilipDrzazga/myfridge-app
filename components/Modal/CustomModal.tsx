@@ -4,18 +4,23 @@ import { useFormik } from "formik";
 import uuid from "react-native-uuid";
 
 import { AppContext } from "../../context/AppContext";
+import { AuthContext } from "../../context/AuthContex";
+import { RealtimeDB } from "../../database/realtimeDB";
 import GlobalStyle from "../../style/GlobalStyle";
 import { validationSchema } from "../../validationSchema/modalValidationSchema";
 import useIsKeyboardVisible from "../../hooks/useIsKeyboardVisible";
 import CustomButton from "../CustomButton";
 import { ProductCategory, ProductCompartment, ProductDate, ProductName, ProductQuantity } from "./components";
 
+const DB = new RealtimeDB();
+
 const CustomModal = () => {
-  const ctx = useContext(AppContext);
+  const ctxApp = useContext(AppContext);
+  const ctxAuth = useContext(AuthContext);
   const isKeyboardVisible = useIsKeyboardVisible();
   const closeModal = () => {
-    ctx.productToUpdate && ctx.updateProduct(null);
-    return ctx.setModalVisible();
+    ctxApp.productToUpdate && ctxApp.updateProduct(null);
+    return ctxApp.setModalVisible();
   };
   const formik = useFormik({
     initialValues: {
@@ -28,25 +33,33 @@ const CustomModal = () => {
     },
     validationSchema: validationSchema,
     onSubmit: (values, actions) => {
-      if (ctx.productToUpdate) {
-        ctx.dispatch({
+      if (ctxApp.productToUpdate) {
+        ctxApp.dispatch({
           type: "UPDATE_PRODUCT",
           payload: {
-            value: { ...values, bought: values.quantity, categoryAll: "All", id: ctx.productToUpdate.id.toString() },
+            value: { ...values, bought: values.quantity, categoryAll: "All", id: ctxApp.productToUpdate.id.toString() },
           },
         });
-        ctx.setModalVisible();
+        ctxApp.setModalVisible();
       } else {
-        ctx.setModalVisible();
-        ctx.dispatch({
+        const uniqueId = uuid.v4().toString();
+        ctxApp.setModalVisible();
+        ctxApp.dispatch({
           type: "ADD_PRODUCT",
           payload: {
             ...values,
             bought: values.quantity,
             categoryAll: "All",
-            id: uuid.v4().toString(),
+            id: uniqueId,
             isSelected: false,
           },
+        });
+        DB.addNewItem(ctxAuth.userId, {
+          ...values,
+          bought: values.quantity,
+          categoryAll: "All",
+          id: uniqueId,
+          isSelected: false,
         });
       }
       actions.resetForm();
@@ -56,21 +69,21 @@ const CustomModal = () => {
   });
 
   useEffect(() => {
-    if (ctx.productToUpdate) {
+    if (ctxApp.productToUpdate) {
       formik.setValues({
-        name: ctx.productToUpdate.name,
-        category: ctx.productToUpdate.category,
-        compartment: ctx.productToUpdate.compartment,
-        quantity: ctx.productToUpdate.quantity,
-        boughtDate: ctx.productToUpdate.boughtDate.toString(),
-        expiryDate: ctx.productToUpdate.expiryDate.toString(),
+        name: ctxApp.productToUpdate.name,
+        category: ctxApp.productToUpdate.category,
+        compartment: ctxApp.productToUpdate.compartment,
+        quantity: ctxApp.productToUpdate.quantity,
+        boughtDate: ctxApp.productToUpdate.boughtDate.toString(),
+        expiryDate: ctxApp.productToUpdate.expiryDate.toString(),
       });
     }
-  }, [ctx.productToUpdate]);
+  }, [ctxApp.productToUpdate]);
 
   return (
     <>
-      <Modal statusBarTranslucent={true} animationType="slide" transparent={true} visible={ctx.isModalVisible}>
+      <Modal statusBarTranslucent={true} animationType="slide" transparent={true} visible={ctxApp.isModalVisible}>
         <Pressable onPress={() => (closeModal(), formik.resetForm())} style={styles.modalOutside}>
           <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
             <View
@@ -113,7 +126,7 @@ const CustomModal = () => {
               <View style={{ width: "100%", flexDirection: "row", justifyContent: "space-evenly", marginTop: 20 }}>
                 <CustomButton
                   onPress={formik.handleSubmit}
-                  title={ctx.productToUpdate ? "Update" : "Save"}
+                  title={ctxApp.productToUpdate ? "Update" : "Save"}
                   fontSize={20}
                   additionalStyle={styles.saveButton}
                 />
