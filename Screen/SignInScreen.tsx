@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from "react";
-import { Keyboard, StyleSheet, Text, View } from "react-native";
+import { Keyboard, StyleSheet, Text, View, ToastAndroid } from "react-native";
 import Animated, {
   ZoomInLeft,
   ZoomIn,
@@ -12,8 +12,9 @@ import Animated, {
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { useFormik } from "formik";
 import { type NativeStackScreenProps } from "@react-navigation/native-stack";
-import { FIREBASE_AUTH, onAuthStateChanged } from "../firebase/firebaseConfig";
+import { FIREBASE_AUTH, signInWithEmailAndPassword } from "../firebase/firebaseConfig";
 
+import { AppContext } from "../context/AppContext";
 import { AuthContext } from "../context/AuthContex";
 import CustomButton from "../components/CustomButton";
 import CustomInput from "../components/CustomInput";
@@ -22,17 +23,23 @@ import ICONS_BACKGROUND from "../constants/ICONS_BACKGROUND";
 import GlobalStyle from "../style/GlobalStyle";
 import { SignInSchema } from "../validationSchema/modalValidationSchema";
 import { type RootStackParams } from "../navigation/AuthStackNavigation";
+import { getFriendlyFirebaseAuthErrorMessage } from "../helpers";
 
 type AuthScreenProps = NativeStackScreenProps<RootStackParams, "SignUp">;
 
 const SignInScreen = ({ navigation, route }: AuthScreenProps) => {
-  const ctx = useContext(AuthContext);
+  const ctxAuth = useContext(AuthContext);
+  const ctxApp = useContext(AppContext);
   const [keyboardStatus, setKeyboardStatus] = useState("");
   const { fromScreen } = route.params;
 
   const keyboard = useAnimatedKeyboard({ isStatusBarTranslucentAndroid: true });
   const modalHeight = useSharedValue(fromScreen === "AuthScreen" ? 500 : 870);
   const borderRadius = useSharedValue(50);
+
+  const showToast = (message) => {
+    ToastAndroid.showWithGravity(message, ToastAndroid.SHORT, ToastAndroid.CENTER);
+  };
 
   const formik = useFormik({
     initialValues: {
@@ -41,16 +48,21 @@ const SignInScreen = ({ navigation, route }: AuthScreenProps) => {
     },
     validationSchema: SignInSchema,
     onSubmit: (values, actions) => {
-      onAuthStateChanged(FIREBASE_AUTH, (user) => {
-        if (user) {
-          const uid = user.uid;
-          ctx.activeUser(true);
-          // ...
-        } else {
-          // User is signed out
-          // ...
-        }
-      });
+      if (values) {
+        ctxApp.isLoading(true);
+        signInWithEmailAndPassword(FIREBASE_AUTH, values.email, values.password)
+          .then((userCredential) => {
+            // Signed in
+            ctxAuth.activeUser(true);
+            ctxApp.isLoading(false);
+            const user = userCredential.user;
+            // ...
+          })
+          .catch((error) => {
+            showToast(getFriendlyFirebaseAuthErrorMessage(error.code));
+            ctxApp.isLoading(false);
+          });
+      }
     },
     validateOnChange: false,
     validateOnBlur: false,

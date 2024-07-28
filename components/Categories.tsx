@@ -6,11 +6,11 @@ import { AppContext } from "../context/AppContext";
 import Product from "./Product";
 
 const Categories = ({ route }) => {
-  const ctx = useContext(AppContext);
+  const ctxApp = useContext(AppContext);
 
   const filterProduct = () => {
-    if (ctx.state) {
-      const productByCompartment = ctx.state.filter((item) => item.compartment === ctx.activeCompartmentTab);
+    if (ctxApp.state) {
+      const productByCompartment = ctxApp.state.filter((item) => item.compartment === ctxApp.activeCompartmentTab);
       const productByCategory = productByCompartment.filter((item) => {
         return item.category === route.name || item.categoryAll === route.name ? item : null;
       });

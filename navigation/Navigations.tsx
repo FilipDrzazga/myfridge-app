@@ -1,12 +1,12 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext } from "react";
 
 import BottomTabNavigation from "../navigation/BottomTabNavigation";
 import AuthStackNavigation from "../navigation/AuthStackNavigation";
 import { AuthContext } from "../context/AuthContex";
 
 const Navigations = () => {
-  const ctx = useContext(AuthContext);
-  return <>{ctx.isUserActive ? <BottomTabNavigation /> : <AuthStackNavigation />}</>;
+  const ctxAuth = useContext(AuthContext);
+  return <>{ctxAuth.isUserActive ? <BottomTabNavigation /> : <AuthStackNavigation />}</>;
 };
 
 export default Navigations;

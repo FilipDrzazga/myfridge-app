@@ -10,7 +10,7 @@ import GlobalStyle from "../style/GlobalStyle";
 const AnimatedPressableBtn = Animated.createAnimatedComponent(Pressable);
 
 const OpenModalBtn = () => {
-  const ctx = useContext(AppContext);
+  const ctxApp = useContext(AppContext);
 
   const width = useSharedValue(70);
   const scale = useSharedValue(0);
@@ -38,47 +38,47 @@ const OpenModalBtn = () => {
     return Gesture.Tap()
       .maxDuration(99999999)
       .onBegin(() => {
-        if (!ctx.isSelectedToDelete) {
-          runOnJS(ctx.setModalVisible)();
-        } else if (ctx.isSelectedToDelete) {
-          runOnJS(ctx.dispatch)({ type: "UPDATE_PRODUCT", payload: { action: "resetSelection" } });
-          runOnJS(ctx.updateProductsToDelete)();
-          runOnJS(ctx.selectToDelete)(false);
+        if (!ctxApp.isSelectedToDelete) {
+          runOnJS(ctxApp.setModalVisible)();
+        } else if (ctxApp.isSelectedToDelete) {
+          runOnJS(ctxApp.dispatch)({ type: "UPDATE_PRODUCT", payload: { action: "resetSelection" } });
+          runOnJS(ctxApp.updateProductsToDelete)();
+          runOnJS(ctxApp.selectToDelete)(false);
         }
       });
-  }, [ctx.isSelectedToDelete, ctx.isModalVisible]);
+  }, [ctxApp.isSelectedToDelete, ctxApp.isModalVisible]);
 
   const reamoveBtnGesture = useMemo(() => {
     return Gesture.Tap()
       .maxDuration(99999999)
       .onBegin(() => {
-        if (ctx.isSelectedToDelete) {
-          runOnJS(ctx.dispatch)({ type: "REMOVE_PRODUCT" });
+        if (ctxApp.isSelectedToDelete) {
+          runOnJS(ctxApp.dispatch)({ type: "REMOVE_PRODUCT" });
         }
       })
       .onEnd(() => {
-        runOnJS(ctx.selectToDelete)(false);
+        runOnJS(ctxApp.selectToDelete)(false);
       });
-  }, [ctx.isSelectedToDelete]);
+  }, [ctxApp.isSelectedToDelete]);
 
   useEffect(() => {
-    if (ctx.state.every((obj) => obj.isSelected === false)) {
-      runOnJS(ctx.selectToDelete)(false);
+    if (ctxApp.state.every((obj) => obj.isSelected === false)) {
+      runOnJS(ctxApp.selectToDelete)(false);
     }
-    if (ctx.isSelectedToDelete) {
+    if (ctxApp.isSelectedToDelete) {
       width.value = withTiming(150);
       scale.value = withDelay(100, withTiming(1));
       rotate.value = withTiming(45);
-    } else if (!ctx.isSelectedToDelete) {
+    } else if (!ctxApp.isSelectedToDelete) {
       width.value = withTiming(70);
       scale.value = withTiming(0);
       rotate.value = withTiming(0);
     }
-  }, [ctx.isSelectedToDelete, ctx.state]);
+  }, [ctxApp.isSelectedToDelete, ctxApp.state]);
 
   return (
     <Animated.View style={[styles.container, animatedContainerStyleOnDelete]}>
-      {ctx.isSelectedToDelete && (
+      {ctxApp.isSelectedToDelete && (
         <GestureDetector gesture={reamoveBtnGesture}>
           <AnimatedPressableBtn style={[styles.removeProductBtn, animatedRemoveBtnOnDelete]}>
             <Ionicons name="trash-outline" color={GlobalStyle.colors.button.icon} size={40} />

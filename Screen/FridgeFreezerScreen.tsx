@@ -12,14 +12,14 @@ import OpenModalBtn from "../components/OpenModalBtn";
 const Tab = createMaterialTopTabNavigator();
 
 const FridgeFreezerScreen = ({ route }) => {
-  const ctx = useContext(AppContext);
+  const ctxApp = useContext(AppContext);
 
   const [fontsLoaded, fontError] = useFonts({
     PoppinsRegular: require("../assets/font/Poppins-Regular.ttf"),
   });
 
   useEffect(() => {
-    ctx.getCurrentTabCompartment(route.params.fromBottomTab);
+    ctxApp.getCurrentTabCompartment(route.params.fromBottomTab);
   }, [route]);
 
   if (!fontsLoaded && !fontError) {
@@ -51,7 +51,7 @@ const FridgeFreezerScreen = ({ route }) => {
             borderRadius: 5,
             backgroundColor: GlobalStyle.colors.indicator.color,
           },
-          swipeEnabled: ctx.isSelectedToDelete ? false : true,
+          swipeEnabled: ctxApp.isSelectedToDelete ? false : true,
           tabBarScrollEnabled: true,
           tabBarPressColor: "transparent",
         }}
@@ -63,7 +63,7 @@ const FridgeFreezerScreen = ({ route }) => {
             key={item.id}
             listeners={{
               tabPress: (e) => {
-                ctx.isSelectedToDelete && e.preventDefault();
+                ctxApp.isSelectedToDelete && e.preventDefault();
               },
             }}
           />

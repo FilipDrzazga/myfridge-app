@@ -14,6 +14,7 @@ import { useFormik } from "formik";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { FIREBASE_AUTH, createUserWithEmailAndPassword } from "../firebase/firebaseConfig";
 
+import { AppContext } from "../context/AppContext";
 import { AuthContext } from "../context/AuthContex";
 import GlobalStyle from "../style/GlobalStyle";
 import CustomText from "../components/CustomText";
@@ -22,11 +23,13 @@ import CustomInput from "../components/CustomInput";
 import { SignUpSchema } from "../validationSchema/modalValidationSchema";
 import CustomButton from "../components/CustomButton";
 import { type RootStackParams } from "../navigation/AuthStackNavigation";
+import { getFriendlyFirebaseAuthErrorMessage } from "../helpers";
 
 type AuthScreenProps = NativeStackScreenProps<RootStackParams, "SignIn">;
 
 const SignUpScreen = ({ navigation, route }: AuthScreenProps) => {
-  const ctx = useContext(AuthContext);
+  const ctxAuth = useContext(AuthContext);
+  const ctxApp = useContext(AppContext);
   const [keyboardStatus, setKeyboardStatus] = useState("");
   const { fromScreen } = route.params;
 
@@ -46,14 +49,17 @@ const SignUpScreen = ({ navigation, route }: AuthScreenProps) => {
     validationSchema: SignUpSchema,
     onSubmit: (values, actions) => {
       if (values) {
+        ctxApp.isLoading(true);
         Keyboard.dismiss();
         createUserWithEmailAndPassword(FIREBASE_AUTH, values.email, values.password)
           .then((userCredential) => {
             const user = userCredential.user;
-            ctx.activeUser(true);
+            ctxAuth.activeUser(true);
+            ctxApp.isLoading(false);
           })
           .catch((error) => {
-            showToast("Email already in use.");
+            showToast(getFriendlyFirebaseAuthErrorMessage(error.code));
+            ctxApp.isLoading(false);
           });
       }
     },
@@ -158,6 +164,7 @@ const SignUpScreen = ({ navigation, route }: AuthScreenProps) => {
             title="Create account"
             fontSize={20}
             additionalStyle={styles.createAccountBtn}
+            activeLoader={ctxApp.loader}
           />
           <View style={styles.separatorContainer}>
             <View style={styles.separator} />

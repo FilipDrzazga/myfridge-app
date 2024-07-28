@@ -1,21 +1,26 @@
 import React, { useContext } from "react";
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, ToastAndroid, View } from "react-native";
 
 import { AuthContext } from "../context/AuthContex";
 import GlobalStyle from "../style/GlobalStyle";
 import CustomButton from "../components/CustomButton";
+import { getFriendlyFirebaseAuthErrorMessage } from "../helpers";
 import { FIREBASE_AUTH, signOut } from "../firebase/firebaseConfig";
 
 const SettingsScreen = () => {
-  const ctx = useContext(AuthContext);
+  const ctxAuth = useContext(AuthContext);
+
+  const showToast = (message) => {
+    ToastAndroid.showWithGravity(message, ToastAndroid.SHORT, ToastAndroid.CENTER);
+  };
 
   const signOutUser = () => {
     signOut(FIREBASE_AUTH)
       .then(() => {
-        ctx.activeUser(false);
+        ctxAuth.activeUser(false);
       })
       .catch((error) => {
-        // An error happened.
+        showToast(getFriendlyFirebaseAuthErrorMessage(error.code));
       });
   };
 

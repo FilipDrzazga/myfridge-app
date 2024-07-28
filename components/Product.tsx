@@ -21,26 +21,26 @@ interface ProductProps {
 }
 
 const Product = ({ product }: ProductProps) => {
-  const ctx = useContext(AppContext);
+  const ctxApp = useContext(AppContext);
 
   const scale = useSharedValue(1);
   const opacity = useSharedValue(1);
 
   const increaseQuantity = () => {
-    ctx.dispatch({
+    ctxApp.dispatch({
       type: "UPDATE_PRODUCT",
       payload: { field: "quantity", id: product.id.toString(), action: "increase" },
     });
   };
   const decreaseQuantity = () => {
-    ctx.dispatch({
+    ctxApp.dispatch({
       type: "UPDATE_PRODUCT",
       payload: { field: "quantity", id: product.id.toString(), action: "decrease" },
     });
   };
   const updateProduct = (product) => {
-    ctx.setModalVisible();
-    ctx.updateProduct(product);
+    ctxApp.setModalVisible();
+    ctxApp.updateProduct(product);
   };
 
   const animatedProductStyle = useAnimatedStyle(() => {
@@ -51,30 +51,30 @@ const Product = ({ product }: ProductProps) => {
   });
   const onLongPressGesture = useMemo(() => {
     return Gesture.LongPress()
-      .minDuration(ctx.isSelectedToDelete ? 50 : 1000)
+      .minDuration(ctxApp.isSelectedToDelete ? 50 : 1000)
       .onStart(() => {
         if (!product.isSelected) {
           opacity.value = withTiming(0.3, { duration: 300 });
           scale.value = withTiming(0.95, { duration: 300 });
-          runOnJS(ctx.dispatch)({ type: "UPDATE_PRODUCT", payload: { value: { ...product, isSelected: true } } });
-          runOnJS(ctx.updateProductsToDelete)(product.id);
-          if (!ctx.isSelectedToDelete) {
-            runOnJS(ctx.selectToDelete)(true);
+          runOnJS(ctxApp.dispatch)({ type: "UPDATE_PRODUCT", payload: { value: { ...product, isSelected: true } } });
+          runOnJS(ctxApp.updateProductsToDelete)(product.id);
+          if (!ctxApp.isSelectedToDelete) {
+            runOnJS(ctxApp.selectToDelete)(true);
           }
         } else {
           opacity.value = withTiming(1, { duration: 300 });
           scale.value = withTiming(1, { duration: 300 });
-          runOnJS(ctx.dispatch)({ type: "UPDATE_PRODUCT", payload: { value: { ...product, isSelected: false } } });
+          runOnJS(ctxApp.dispatch)({ type: "UPDATE_PRODUCT", payload: { value: { ...product, isSelected: false } } });
         }
       });
-  }, [ctx.isSelectedToDelete, product.isSelected]);
+  }, [ctxApp.isSelectedToDelete, product.isSelected]);
 
   useEffect(() => {
-    if (!ctx.isSelectedToDelete) {
+    if (!ctxApp.isSelectedToDelete) {
       opacity.value = withTiming(1, { duration: 300 });
       scale.value = withTiming(1, { duration: 300 });
     }
-  }, [ctx.isSelectedToDelete]);
+  }, [ctxApp.isSelectedToDelete]);
 
   return (
     <>
@@ -82,7 +82,7 @@ const Product = ({ product }: ProductProps) => {
         <Animated.View entering={ZoomIn} exiting={ZoomOut}>
           <Animated.View style={[{ flex: 1 }, animatedProductStyle]}>
             <Pressable
-              onPress={() => !ctx.isSelectedToDelete && updateProduct(product)}
+              onPress={() => !ctxApp.isSelectedToDelete && updateProduct(product)}
               style={styles.productContainer}
             >
               <View style={styles.productExpDate}>

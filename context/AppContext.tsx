@@ -39,11 +39,13 @@ type ContextValue = {
   productToUpdate: null | State;
   isSelectedToDelete: boolean;
   productsToDelete: string[];
+  loader: boolean;
   getCurrentTabCompartment: (compartment: string) => void;
   setModalVisible: () => void;
   updateProduct: (product?: State | null) => void;
   selectToDelete: (isSelected: boolean) => void;
   updateProductsToDelete: (poductId?: string) => void;
+  isLoading: (isLoading: boolean) => void;
 };
 
 const reducer = (state: State[] | [], action: Action) => {
@@ -102,6 +104,7 @@ const AppContextProvider = ({ children }: AppContextProviderProps) => {
   const [productToUpdate, setProductToUpdated] = useState<null | State>(null);
   const [isSelectedToDelete, setIsSelectedToDelete] = useState(false);
   const [productsToDelete, setProductsToDelete] = useState([]);
+  const [loader, setLoader] = useState(false);
 
   const ctx: ContextValue = {
     state,
@@ -111,6 +114,7 @@ const AppContextProvider = ({ children }: AppContextProviderProps) => {
     productToUpdate,
     isSelectedToDelete,
     productsToDelete,
+    loader,
     getCurrentTabCompartment(value) {
       return setActiveCompartmentTab(value);
     },
@@ -129,6 +133,9 @@ const AppContextProvider = ({ children }: AppContextProviderProps) => {
       } else if (productId) {
         return setProductsToDelete((prevState) => [...prevState, productId]);
       }
+    },
+    isLoading(isLoading) {
+      setLoader(isLoading);
     },
   };
 
