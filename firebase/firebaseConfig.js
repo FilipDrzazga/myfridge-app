@@ -4,6 +4,7 @@ import {
   initializeAuth,
   getReactNativePersistence,
   onAuthStateChanged,
+  signOut,
 } from "firebase/auth";
 import ReactNativeAsyncStorage from "@react-native-async-storage/async-storage";
 
@@ -22,4 +23,4 @@ const FIREBASE_AUTH = initializeAuth(FIREBASE_APP, {
   persistence: getReactNativePersistence(ReactNativeAsyncStorage),
 });
 
-export { FIREBASE_AUTH, createUserWithEmailAndPassword, onAuthStateChanged };
+export { FIREBASE_AUTH, createUserWithEmailAndPassword, onAuthStateChanged, signOut };
