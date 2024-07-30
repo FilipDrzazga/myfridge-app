@@ -1,4 +1,5 @@
 import React, { useReducer, createContext, useState } from "react";
+import { string } from "yup";
 
 type Action =
   | { type: "ADD_PRODUCT"; payload: State }
@@ -45,15 +46,26 @@ type ContextValue = {
   updateProduct: (product?: State | null) => void;
   selectToDelete: (isSelected: boolean) => void;
   updateProductsToDelete: (poductId?: string) => void;
-  isLoading: (isLoading: boolean) => void;
+  loadingIndicator: (isLoading: boolean) => void;
 };
 
 const reducer = (state: State[] | [], action: Action) => {
   switch (action.type) {
     case "ADD_PRODUCT": {
       const { payload } = action;
-      const newState = [...state, payload];
-      return newState;
+      if (typeof payload.toString() === "string") {
+        const json = JSON.stringify(payload);
+        const data = JSON.parse(json);
+        const dataArr = Object.keys(data).map((key) => ({
+          referenceDatabaseKey: key,
+          ...data[key],
+        }));
+        const newState = dataArr;
+        return newState;
+      } else {
+        const newState = [...state, payload];
+        return newState;
+      }
     }
     case "REMOVE_PRODUCT": {
       const newState = state.filter((item) => item.isSelected === false);
@@ -134,7 +146,7 @@ const AppContextProvider = ({ children }: AppContextProviderProps) => {
         return setProductsToDelete((prevState) => [...prevState, productId]);
       }
     },
-    isLoading(isLoading) {
+    loadingIndicator(isLoading) {
       setLoader(isLoading);
     },
   };

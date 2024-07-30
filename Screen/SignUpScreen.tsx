@@ -12,11 +12,10 @@ import Animated, {
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { useFormik } from "formik";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { FIREBASE_AUTH, createUserWithEmailAndPassword } from "../firebase/firebaseConfig";
+import { FIREBASE_AUTH, FIREBASE_DB, createUserWithEmailAndPassword, ref, set } from "../firebase/firebaseConfig";
 
 import { AppContext } from "../context/AppContext";
 import { AuthContext } from "../context/AuthContex";
-import { RealtimeDB } from "../database/realtimeDB";
 import GlobalStyle from "../style/GlobalStyle";
 import CustomText from "../components/CustomText";
 import ICONS_BACKGROUND from "../constants/ICONS_BACKGROUND";
@@ -27,7 +26,6 @@ import { type RootStackParams } from "../navigation/AuthStackNavigation";
 import { getFriendlyFirebaseAuthErrorMessage } from "../helpers";
 
 type AuthScreenProps = NativeStackScreenProps<RootStackParams, "SignIn">;
-const DB = new RealtimeDB();
 
 const SignUpScreen = ({ navigation, route }: AuthScreenProps) => {
   const ctxAuth = useContext(AuthContext);
@@ -51,18 +49,21 @@ const SignUpScreen = ({ navigation, route }: AuthScreenProps) => {
     validationSchema: SignUpSchema,
     onSubmit: (values, actions) => {
       if (values) {
-        ctxApp.isLoading(true);
+        ctxApp.loadingIndicator(true);
         Keyboard.dismiss();
         createUserWithEmailAndPassword(FIREBASE_AUTH, values.email, values.password)
           .then((userCredential) => {
+            set(ref(FIREBASE_DB, "users/" + userCredential.user.uid), {
+              username: userCredential.user.uid,
+              email: userCredential.user.uid,
+            });
             ctxAuth.getUserId(userCredential.user.uid);
-            DB.createNewUserOnDB(userCredential.user.uid, userCredential.user.email);
             ctxAuth.activeUser(true);
-            ctxApp.isLoading(false);
+            ctxApp.loadingIndicator(false);
           })
           .catch((error) => {
             showToast(getFriendlyFirebaseAuthErrorMessage(error.code));
-            ctxApp.isLoading(false);
+            ctxApp.loadingIndicator(false);
           });
       }
     },

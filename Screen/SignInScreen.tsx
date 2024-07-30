@@ -12,9 +12,9 @@ import Animated, {
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { useFormik } from "formik";
 import { type NativeStackScreenProps } from "@react-navigation/native-stack";
-import { FIREBASE_AUTH, signInWithEmailAndPassword } from "../firebase/firebaseConfig";
+import { FIREBASE_AUTH, FIREBASE_DB, onValue, ref, signInWithEmailAndPassword } from "../firebase/firebaseConfig";
 
-import { AppContext } from "../context/AppContext";
+import { AppContext, type State } from "../context/AppContext";
 import { AuthContext } from "../context/AuthContex";
 import CustomButton from "../components/CustomButton";
 import CustomInput from "../components/CustomInput";
@@ -47,17 +47,24 @@ const SignInScreen = ({ navigation, route }: AuthScreenProps) => {
       password: "",
     },
     validationSchema: SignInSchema,
-    onSubmit: (values, actions) => {
+    onSubmit: (values) => {
       if (values) {
-        ctxApp.isLoading(true);
+        ctxApp.loadingIndicator(true);
         signInWithEmailAndPassword(FIREBASE_AUTH, values.email, values.password)
           .then((userCredential) => {
+            const fridgeRef = ref(FIREBASE_DB, "users/" + userCredential.user.uid + "/fridge");
+            onValue(fridgeRef, (snapshot) => {
+              if (snapshot.exists()) {
+                const data = snapshot.val();
+                ctxApp.dispatch({ type: "ADD_PRODUCT", payload: data });
+              }
+            });
             ctxAuth.activeUser(true);
-            ctxApp.isLoading(false);
+            ctxApp.loadingIndicator(false);
           })
           .catch((error) => {
             showToast(getFriendlyFirebaseAuthErrorMessage(error.code));
-            ctxApp.isLoading(false);
+            ctxApp.loadingIndicator(false);
           });
       }
     },

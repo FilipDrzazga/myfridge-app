@@ -5,14 +5,12 @@ import uuid from "react-native-uuid";
 
 import { AppContext } from "../../context/AppContext";
 import { AuthContext } from "../../context/AuthContex";
-import { RealtimeDB } from "../../database/realtimeDB";
 import GlobalStyle from "../../style/GlobalStyle";
 import { validationSchema } from "../../validationSchema/modalValidationSchema";
 import useIsKeyboardVisible from "../../hooks/useIsKeyboardVisible";
 import CustomButton from "../CustomButton";
 import { ProductCategory, ProductCompartment, ProductDate, ProductName, ProductQuantity } from "./components";
-
-const DB = new RealtimeDB();
+import { FIREBASE_DB, push, ref, set } from "../../firebase/firebaseConfig";
 
 const CustomModal = () => {
   const ctxApp = useContext(AppContext);
@@ -33,6 +31,7 @@ const CustomModal = () => {
     },
     validationSchema: validationSchema,
     onSubmit: (values, actions) => {
+      const uniqueId = uuid.v4().toString();
       if (ctxApp.productToUpdate) {
         ctxApp.dispatch({
           type: "UPDATE_PRODUCT",
@@ -42,7 +41,6 @@ const CustomModal = () => {
         });
         ctxApp.setModalVisible();
       } else {
-        const uniqueId = uuid.v4().toString();
         ctxApp.setModalVisible();
         ctxApp.dispatch({
           type: "ADD_PRODUCT",
@@ -54,12 +52,20 @@ const CustomModal = () => {
             isSelected: false,
           },
         });
-        DB.addNewItem(ctxAuth.userId, {
+      }
+      const fridgeRef = ref(FIREBASE_DB, "users/" + ctxAuth.userId + "/fridge");
+      if (fridgeRef) {
+        const newFridgeItemRef = push(fridgeRef);
+        set(newFridgeItemRef, {
           ...values,
           bought: values.quantity,
           categoryAll: "All",
           id: uniqueId,
           isSelected: false,
+        });
+      } else {
+        set(ref(FIREBASE_DB, "users/" + ctxAuth.userId), {
+          fridge: [{ ...values, bought: values.quantity, categoryAll: "All", id: uniqueId, isSelected: false }],
         });
       }
       actions.resetForm();

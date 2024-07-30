@@ -9,7 +9,7 @@ import {
   debugErrorMap,
 } from "firebase/auth";
 import ReactNativeAsyncStorage from "@react-native-async-storage/async-storage";
-import { getDatabase, set, ref, push } from "firebase/database";
+import { getDatabase, set, ref, push, onValue } from "firebase/database";
 
 const firebaseConfig = {
   apiKey: process.env.EXPO_PUBLIC_API_KEY,
@@ -34,6 +34,7 @@ export {
   set,
   ref,
   push,
+  onValue,
   createUserWithEmailAndPassword,
   onAuthStateChanged,
   signOut,
