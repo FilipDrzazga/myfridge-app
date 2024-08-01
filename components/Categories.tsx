@@ -1,12 +1,15 @@
-import React, { useContext } from "react";
+import React, { useContext, useMemo } from "react";
 import { StyleSheet, View } from "react-native";
 import Animated, { LinearTransition } from "react-native-reanimated";
 
 import { AppContext } from "../context/AppContext";
+import Loader from "./Loader";
 import Product from "./Product";
+import NoData from "./NoData";
 
 const Categories = ({ route }) => {
   const ctxApp = useContext(AppContext);
+  const isLoading = useMemo(() => ctxApp.loader, [ctxApp.loader]);
 
   const filterProduct = () => {
     if (ctxApp.state) {
@@ -26,6 +29,23 @@ const Categories = ({ route }) => {
         keyExtractor={(item) => item.id.toString()}
         renderItem={({ item }) => <Product product={item} />}
         itemLayoutAnimation={LinearTransition.delay(100)}
+        ListEmptyComponent={() => {
+          if (isLoading) {
+            return (
+              <Loader
+                additionalStyle={{
+                  width: "100%",
+                  height: 650,
+                  justifyContent: "center",
+                  alignItems: "center",
+                  gap: 5,
+                }}
+              />
+            );
+          } else {
+            return <NoData />;
+          }
+        }}
         ListFooterComponent={() => {
           return (
             <View

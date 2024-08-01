@@ -10,7 +10,11 @@ import Animated, {
 } from "react-native-reanimated";
 import GlobalStyle from "../style/GlobalStyle";
 
-const Loader = () => {
+type LoaderProps = {
+  additionalStyle?: { [key: string | number]: any };
+};
+
+const Loader = ({ additionalStyle }: LoaderProps) => {
   const translateYOne = useSharedValue(0);
   const translateYTwo = useSharedValue(0);
   const translateYThree = useSharedValue(0);
@@ -48,7 +52,7 @@ const Loader = () => {
   });
 
   return (
-    <Animated.View style={styles.container}>
+    <Animated.View style={[styles.container, additionalStyle]}>
       <Animated.View style={[styles.first, animatedDotsOne]}></Animated.View>
       <Animated.View style={[styles.second, animatedDotsTwo]}></Animated.View>
       <Animated.View style={[styles.third, animatedDotsThree]}></Animated.View>
