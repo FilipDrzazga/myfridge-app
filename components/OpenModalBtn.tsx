@@ -3,7 +3,9 @@ import { StyleSheet, Pressable } from "react-native";
 import { AppContext } from "../context/AppContext";
 import Animated, { useAnimatedStyle, useSharedValue, withDelay, withTiming, runOnJS } from "react-native-reanimated";
 import { GestureDetector, Gesture } from "react-native-gesture-handler";
+import { FIREBASE_DB, ref, set, update } from "../firebase/firebaseConfig";
 
+import { AuthContext } from "../context/AuthContex";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import GlobalStyle from "../style/GlobalStyle";
 
@@ -11,6 +13,7 @@ const AnimatedPressableBtn = Animated.createAnimatedComponent(Pressable);
 
 const OpenModalBtn = () => {
   const ctxApp = useContext(AppContext);
+  const ctxAuth = useContext(AuthContext);
 
   const width = useSharedValue(70);
   const scale = useSharedValue(0);
@@ -34,13 +37,25 @@ const OpenModalBtn = () => {
     };
   });
 
+  const removeDataFromDBWrapper = () => {
+    const pathObjectToDelete = ctxApp.productsToDelete.reduce((acc, item) => {
+      acc[String(item)] = null;
+      return acc;
+    }, {});
+
+    return update(ref(FIREBASE_DB), pathObjectToDelete);
+  };
+
   const addBtnGesture = useMemo(() => {
     return Gesture.Tap()
       .maxDuration(99999999)
       .onBegin(() => {
         if (!ctxApp.isSelectedToDelete) {
           runOnJS(ctxApp.setModalVisible)();
-        } else if (ctxApp.isSelectedToDelete) {
+        }
+      })
+      .onEnd(() => {
+        if (ctxApp.isSelectedToDelete) {
           runOnJS(ctxApp.dispatch)({ type: "UPDATE_PRODUCT", payload: { action: "resetSelection" } });
           runOnJS(ctxApp.updateProductsToDelete)();
           runOnJS(ctxApp.selectToDelete)(false);
@@ -48,22 +63,24 @@ const OpenModalBtn = () => {
       });
   }, [ctxApp.isSelectedToDelete, ctxApp.isModalVisible]);
 
-  const reamoveBtnGesture = useMemo(() => {
+  const removeBtnGesture = useMemo(() => {
     return Gesture.Tap()
       .maxDuration(99999999)
-      .onBegin(() => {
+      .onStart(() => {
         if (ctxApp.isSelectedToDelete) {
           runOnJS(ctxApp.dispatch)({ type: "REMOVE_PRODUCT" });
+          runOnJS(removeDataFromDBWrapper)();
         }
       })
       .onEnd(() => {
         runOnJS(ctxApp.selectToDelete)(false);
+        runOnJS(ctxApp.updateProductsToDelete)();
       });
-  }, [ctxApp.isSelectedToDelete]);
+  }, [ctxApp.isSelectedToDelete, ctxApp.productsToDelete]);
 
   useEffect(() => {
     if (ctxApp.state.every((obj) => obj.isSelected === false)) {
-      runOnJS(ctxApp.selectToDelete)(false);
+      ctxApp.selectToDelete(false);
     }
     if (ctxApp.isSelectedToDelete) {
       width.value = withTiming(150);
@@ -79,7 +96,7 @@ const OpenModalBtn = () => {
   return (
     <Animated.View style={[styles.container, animatedContainerStyleOnDelete]}>
       {ctxApp.isSelectedToDelete && (
-        <GestureDetector gesture={reamoveBtnGesture}>
+        <GestureDetector gesture={removeBtnGesture}>
           <AnimatedPressableBtn style={[styles.removeProductBtn, animatedRemoveBtnOnDelete]}>
             <Ionicons name="trash-outline" color={GlobalStyle.colors.button.icon} size={40} />
           </AnimatedPressableBtn>

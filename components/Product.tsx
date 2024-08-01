@@ -10,8 +10,9 @@ import Animated, {
   ZoomOut,
 } from "react-native-reanimated";
 
-import GlobalStyle from "../style/GlobalStyle";
 import { AppContext, type State } from "../context/AppContext";
+import { AuthContext } from "../context/AuthContex";
+import GlobalStyle from "../style/GlobalStyle";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import CustomText from "./CustomText";
 import CircleProgressBar from "./CircleProgressBar";
@@ -22,6 +23,7 @@ interface ProductProps {
 
 const Product = ({ product }: ProductProps) => {
   const ctxApp = useContext(AppContext);
+  const ctxAuth = useContext(AuthContext);
 
   const scale = useSharedValue(1);
   const opacity = useSharedValue(1);
@@ -56,18 +58,24 @@ const Product = ({ product }: ProductProps) => {
         if (!product.isSelected) {
           opacity.value = withTiming(0.3, { duration: 300 });
           scale.value = withTiming(0.95, { duration: 300 });
-          runOnJS(ctxApp.dispatch)({ type: "UPDATE_PRODUCT", payload: { value: { ...product, isSelected: true } } });
-          runOnJS(ctxApp.updateProductsToDelete)(product.id);
-          if (!ctxApp.isSelectedToDelete) {
-            runOnJS(ctxApp.selectToDelete)(true);
-          }
         } else {
           opacity.value = withTiming(1, { duration: 300 });
           scale.value = withTiming(1, { duration: 300 });
+        }
+      })
+      .onEnd(() => {
+        const productPath = `users/${ctxAuth.userId}/fridge/${product.databaseRefId}`;
+        if (!product.isSelected) {
+          runOnJS(ctxApp.dispatch)({ type: "UPDATE_PRODUCT", payload: { value: { ...product, isSelected: true } } });
+          runOnJS(ctxApp.updateProductsToDelete)(productPath, false);
+          runOnJS(ctxApp.selectToDelete)(true);
+        } else {
+          console.log("im here");
           runOnJS(ctxApp.dispatch)({ type: "UPDATE_PRODUCT", payload: { value: { ...product, isSelected: false } } });
+          runOnJS(ctxApp.updateProductsToDelete)(productPath, true);
         }
       });
-  }, [ctxApp.isSelectedToDelete, product.isSelected]);
+  }, [ctxApp.isSelectedToDelete, product.isSelected, ctxApp.productsToDelete]);
 
   useEffect(() => {
     if (!ctxApp.isSelectedToDelete) {

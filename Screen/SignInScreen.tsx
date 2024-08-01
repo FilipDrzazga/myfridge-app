@@ -62,6 +62,7 @@ const SignInScreen = ({ navigation, route }: AuthScreenProps) => {
         signInWithEmailAndPassword(FIREBASE_AUTH, values.email, values.password)
           .then((userCredential) => {
             ctxAuth.activeUser(true);
+            ctxAuth.getUserId(userCredential.user.uid);
             const dabReference = ref(FIREBASE_DB);
             get(child(dabReference, `users/${userCredential.user.uid}/fridge`))
               .then((snapshot) => {

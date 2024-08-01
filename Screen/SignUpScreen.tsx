@@ -53,7 +53,7 @@ const SignUpScreen = ({ navigation, route }: AuthScreenProps) => {
         Keyboard.dismiss();
         createUserWithEmailAndPassword(FIREBASE_AUTH, values.email, values.password)
           .then((userCredential) => {
-            set(ref(FIREBASE_DB, "users/" + userCredential.user.uid), {
+            set(ref(FIREBASE_DB, `users/${userCredential.user.uid}`), {
               username: userCredential.user.email,
               email: userCredential.user.email,
             });

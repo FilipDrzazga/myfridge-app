@@ -10,7 +10,7 @@ import { validationSchema } from "../../validationSchema/modalValidationSchema";
 import useIsKeyboardVisible from "../../hooks/useIsKeyboardVisible";
 import CustomButton from "../CustomButton";
 import { ProductCategory, ProductCompartment, ProductDate, ProductName, ProductQuantity } from "./components";
-import { FIREBASE_DB, onValue, push, ref, set, update } from "../../firebase/firebaseConfig";
+import { FIREBASE_DB, push, ref, set } from "../../firebase/firebaseConfig";
 
 const CustomModal = () => {
   const ctxApp = useContext(AppContext);
@@ -32,12 +32,12 @@ const CustomModal = () => {
     validationSchema: validationSchema,
     onSubmit: (values, actions) => {
       const uniqueId = uuid.v4().toString();
-      const fridgeRef = ref(FIREBASE_DB, "users/" + ctxAuth.userId + "/fridge");
+      const fridgeRef = ref(FIREBASE_DB, `users/${ctxAuth.userId}/fridge`);
 
       if (ctxApp.productToUpdate) {
         const productRefUpdated = ref(
           FIREBASE_DB,
-          "users/" + ctxAuth.userId + "/fridge" + "/" + ctxApp.productToUpdate.databaseRefId
+          `users/${ctxAuth.userId}/fridge/${ctxApp.productToUpdate.databaseRefId}`
         );
         set(productRefUpdated, {
           ...values,

@@ -46,7 +46,7 @@ type ContextValue = {
   setModalVisible: () => void;
   updateProduct: (product?: State | null) => void;
   selectToDelete: (isSelected: boolean) => void;
-  updateProductsToDelete: (poductId?: string) => void;
+  updateProductsToDelete: (poductPath?: string, removeFromArrayToDelete?: boolean) => void;
   loadingIndicator: (isLoading: boolean) => void;
 };
 
@@ -97,7 +97,6 @@ const reducer = (state: State[] | [], action: Action) => {
         }
         return item;
       });
-      console.log(newState);
       return newState;
     }
 
@@ -141,11 +140,14 @@ const AppContextProvider = ({ children }: AppContextProviderProps) => {
     selectToDelete(isSelected) {
       return setIsSelectedToDelete(isSelected);
     },
-    updateProductsToDelete(productId) {
-      if (!productId) {
+    updateProductsToDelete(productPath, removeFromArrayToDelete) {
+      if (!productPath) {
         return setProductsToDelete([]);
-      } else if (productId) {
-        return setProductsToDelete((prevState) => [...prevState, productId]);
+      } else if (productPath && !removeFromArrayToDelete) {
+        return setProductsToDelete((prevState) => [...prevState, productPath]);
+      } else if (productPath && removeFromArrayToDelete) {
+        const filteredArray = productsToDelete.filter((item) => item !== productPath);
+        return setProductsToDelete(filteredArray);
       }
     },
     loadingIndicator(isLoading) {
