@@ -20,6 +20,7 @@ const SettingsScreen = () => {
     signOut(FIREBASE_AUTH)
       .then(() => {
         ctxAuth.activeUser(false);
+        ctxApp.loadingIndicator(false);
       })
       .catch((error) => {
         showToast(getFriendlyFirebaseAuthErrorMessage(error.code));

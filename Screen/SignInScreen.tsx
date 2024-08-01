@@ -58,23 +58,24 @@ const SignInScreen = ({ navigation, route }: AuthScreenProps) => {
     onSubmit: (values) => {
       if (values) {
         ctxApp.loadingIndicator(true);
+        Keyboard.dismiss();
         signInWithEmailAndPassword(FIREBASE_AUTH, values.email, values.password)
           .then((userCredential) => {
             ctxAuth.activeUser(true);
-            ctxApp.loadingIndicator(true);
             const dabReference = ref(FIREBASE_DB);
             get(child(dabReference, `users/${userCredential.user.uid}/fridge`))
               .then((snapshot) => {
                 if (snapshot.exists()) {
+                  ctxApp.loadingIndicator(false);
                   const data = snapshot.val();
-                  console.log(data);
                   ctxApp.dispatch({ type: "ADD_PRODUCT", payload: { data: data, database: true } });
                 } else {
                   console.log("No data available");
                 }
               })
               .catch((error) => {
-                console.error(error);
+                showToast(getFriendlyFirebaseAuthErrorMessage(error.code));
+                ctxApp.loadingIndicator(false);
               });
           })
           .catch((error) => {
@@ -188,6 +189,7 @@ const SignInScreen = ({ navigation, route }: AuthScreenProps) => {
             title="Sign in"
             fontSize={20}
             additionalStyle={styles.createAccountBtn}
+            activeLoader={ctxApp.loader}
           />
           <View style={styles.separatorContainer}>
             <View style={styles.separator} />
