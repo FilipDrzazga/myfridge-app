@@ -12,15 +12,7 @@ import Animated, {
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { useFormik } from "formik";
 import { type NativeStackScreenProps } from "@react-navigation/native-stack";
-import {
-  FIREBASE_AUTH,
-  FIREBASE_DB,
-  onValue,
-  ref,
-  get,
-  signInWithEmailAndPassword,
-  child,
-} from "../firebase/firebaseConfig";
+import { FIREBASE_AUTH, FIREBASE_DB, ref, get, signInWithEmailAndPassword, child } from "../firebase/firebaseConfig";
 
 import { AppContext } from "../context/AppContext";
 import { AuthContext } from "../context/AuthContex";
@@ -63,6 +55,7 @@ const SignInScreen = ({ navigation, route }: AuthScreenProps) => {
           .then((userCredential) => {
             ctxAuth.activeUser(true);
             ctxAuth.getUserId(userCredential.user.uid);
+            ctxAuth.getUserEmail(userCredential.user.email);
             const dabReference = ref(FIREBASE_DB);
             get(child(dabReference, `users/${userCredential.user.uid}/fridge`))
               .then((snapshot) => {

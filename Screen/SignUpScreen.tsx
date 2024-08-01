@@ -57,6 +57,7 @@ const SignUpScreen = ({ navigation, route }: AuthScreenProps) => {
               username: userCredential.user.email,
               email: userCredential.user.email,
             });
+            ctxAuth.getUserEmail(userCredential.user.email);
             ctxAuth.getUserId(userCredential.user.uid);
             ctxAuth.activeUser(true);
             ctxApp.loadingIndicator(false);

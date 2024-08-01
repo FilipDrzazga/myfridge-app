@@ -1,4 +1,3 @@
-import { type Unsubscribe } from "firebase/database";
 import React, { useReducer, createContext, useState } from "react";
 
 type Action =
@@ -48,6 +47,7 @@ type ContextValue = {
   selectToDelete: (isSelected: boolean) => void;
   updateProductsToDelete: (poductPath?: string, removeFromArrayToDelete?: boolean) => void;
   loadingIndicator: (isLoading: boolean) => void;
+  getNumberOfItems: () => number;
 };
 
 const reducer = (state: State[] | [], action: Action) => {
@@ -152,6 +152,9 @@ const AppContextProvider = ({ children }: AppContextProviderProps) => {
     },
     loadingIndicator(isLoading) {
       setLoader(isLoading);
+    },
+    getNumberOfItems() {
+      return state.length;
     },
   };
 
