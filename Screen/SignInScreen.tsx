@@ -12,9 +12,17 @@ import Animated, {
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { useFormik } from "formik";
 import { type NativeStackScreenProps } from "@react-navigation/native-stack";
-import { FIREBASE_AUTH, FIREBASE_DB, onValue, ref, signInWithEmailAndPassword } from "../firebase/firebaseConfig";
+import {
+  FIREBASE_AUTH,
+  FIREBASE_DB,
+  onValue,
+  ref,
+  get,
+  signInWithEmailAndPassword,
+  child,
+} from "../firebase/firebaseConfig";
 
-import { AppContext, type State } from "../context/AppContext";
+import { AppContext } from "../context/AppContext";
 import { AuthContext } from "../context/AuthContex";
 import CustomButton from "../components/CustomButton";
 import CustomInput from "../components/CustomInput";
@@ -52,15 +60,22 @@ const SignInScreen = ({ navigation, route }: AuthScreenProps) => {
         ctxApp.loadingIndicator(true);
         signInWithEmailAndPassword(FIREBASE_AUTH, values.email, values.password)
           .then((userCredential) => {
-            const fridgeRef = ref(FIREBASE_DB, "users/" + userCredential.user.uid + "/fridge");
-            onValue(fridgeRef, (snapshot) => {
-              if (snapshot.exists()) {
-                const data = snapshot.val();
-                ctxApp.dispatch({ type: "ADD_PRODUCT", payload: data });
-              }
-            });
             ctxAuth.activeUser(true);
-            ctxApp.loadingIndicator(false);
+            ctxApp.loadingIndicator(true);
+            const dabReference = ref(FIREBASE_DB);
+            get(child(dabReference, `users/${userCredential.user.uid}/fridge`))
+              .then((snapshot) => {
+                if (snapshot.exists()) {
+                  const data = snapshot.val();
+                  console.log(data);
+                  ctxApp.dispatch({ type: "ADD_PRODUCT", payload: { data: data, database: true } });
+                } else {
+                  console.log("No data available");
+                }
+              })
+              .catch((error) => {
+                console.error(error);
+              });
           })
           .catch((error) => {
             showToast(getFriendlyFirebaseAuthErrorMessage(error.code));

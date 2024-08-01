@@ -1,8 +1,8 @@
+import { type Unsubscribe } from "firebase/database";
 import React, { useReducer, createContext, useState } from "react";
-import { string } from "yup";
 
 type Action =
-  | { type: "ADD_PRODUCT"; payload: State }
+  | { type: "ADD_PRODUCT"; payload: { data: State; database?: boolean } }
   | { type: "REMOVE_PRODUCT" }
   | {
       type: "UPDATE_PRODUCT";
@@ -26,6 +26,7 @@ export type State = {
   boughtDate: string | number;
   expiryDate: string | number;
   isSelected?: boolean;
+  databaseRefId?: string;
 };
 
 type AppContextProviderProps = {
@@ -53,8 +54,8 @@ const reducer = (state: State[] | [], action: Action) => {
   switch (action.type) {
     case "ADD_PRODUCT": {
       const { payload } = action;
-      if (typeof payload.toString() === "string") {
-        const json = JSON.stringify(payload);
+      if (payload.database) {
+        const json = JSON.stringify(payload.data);
         const data = JSON.parse(json);
         const dataArr = Object.keys(data).map((key) => ({
           referenceDatabaseKey: key,
@@ -63,7 +64,7 @@ const reducer = (state: State[] | [], action: Action) => {
         const newState = dataArr;
         return newState;
       } else {
-        const newState = [...state, payload];
+        const newState = [...state, payload.data];
         return newState;
       }
     }
@@ -96,6 +97,7 @@ const reducer = (state: State[] | [], action: Action) => {
         }
         return item;
       });
+      console.log(newState);
       return newState;
     }
 

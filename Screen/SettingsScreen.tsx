@@ -2,6 +2,7 @@ import React, { useContext } from "react";
 import { StyleSheet, ToastAndroid, View } from "react-native";
 
 import { AuthContext } from "../context/AuthContex";
+import { AppContext } from "../context/AppContext";
 import GlobalStyle from "../style/GlobalStyle";
 import CustomButton from "../components/CustomButton";
 import { getFriendlyFirebaseAuthErrorMessage } from "../helpers";
@@ -9,6 +10,7 @@ import { FIREBASE_AUTH, signOut } from "../firebase/firebaseConfig";
 
 const SettingsScreen = () => {
   const ctxAuth = useContext(AuthContext);
+  const ctxApp = useContext(AppContext);
 
   const showToast = (message) => {
     ToastAndroid.showWithGravity(message, ToastAndroid.SHORT, ToastAndroid.CENTER);

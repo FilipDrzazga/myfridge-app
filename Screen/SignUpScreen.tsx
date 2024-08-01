@@ -54,8 +54,8 @@ const SignUpScreen = ({ navigation, route }: AuthScreenProps) => {
         createUserWithEmailAndPassword(FIREBASE_AUTH, values.email, values.password)
           .then((userCredential) => {
             set(ref(FIREBASE_DB, "users/" + userCredential.user.uid), {
-              username: userCredential.user.uid,
-              email: userCredential.user.uid,
+              username: userCredential.user.email,
+              email: userCredential.user.email,
             });
             ctxAuth.getUserId(userCredential.user.uid);
             ctxAuth.activeUser(true);
