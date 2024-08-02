@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Pressable, StyleSheet, View, Dimensions } from "react-native";
 import Animated, {
   useSharedValue,
@@ -7,6 +7,7 @@ import Animated, {
   interpolate,
   Extrapolation,
   type SharedValue,
+  FadeInDown,
 } from "react-native-reanimated";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { type NativeStackScreenProps } from "@react-navigation/native-stack";
@@ -52,6 +53,30 @@ const Indicator = ({ scrollX }: IndicatorProps) => {
 ``;
 const AuthScreen = ({ navigation }: AuthScreenProps) => {
   const scrollX = useSharedValue(0);
+  const height = useSharedValue(0);
+  const opacity = useSharedValue(0);
+
+  const animatedModal = useAnimatedStyle(() => {
+    return {
+      height: height.value,
+    };
+  });
+  const animateModalContent = useAnimatedStyle(() => {
+    const opacity = interpolate(height.value, [0, 500], [0, 1]);
+    return {
+      opacity: withTiming(opacity),
+    };
+  });
+  const animatedText = useAnimatedStyle(() => {
+    const scale = interpolate(height.value, [0, 500], [0, 1]);
+    return {
+      transform: [{ scale: scale }],
+    };
+  });
+
+  useEffect(() => {
+    height.value = withTiming(500, { duration: 500 });
+  }, []);
 
   return (
     <View style={styles.container}>
@@ -60,13 +85,13 @@ const AuthScreen = ({ navigation }: AuthScreenProps) => {
           <Ionicons key={`icons-${id}`} name={icon.name} size={icon.size} color={icon.color} />
         ))}
       </View>
-      <View style={styles.logoTxt}>
+      <Animated.View style={[styles.logoTxt, animatedText]}>
         <CustomText fontType="PoppinsBold" fontSize={60} color={GlobalStyle.colors.black}>
           fridge
         </CustomText>
-      </View>
-      <View style={styles.modal}>
-        <View style={styles.onBoardingContainer}>
+      </Animated.View>
+      <Animated.View style={[styles.modal, animatedModal]}>
+        <Animated.View style={[styles.onBoardingContainer, animateModalContent]}>
           <Animated.FlatList
             data={ONBOARDING_SHORTS}
             keyExtractor={(item) => item.short}
@@ -80,8 +105,8 @@ const AuthScreen = ({ navigation }: AuthScreenProps) => {
             }}
           />
           <Indicator scrollX={scrollX} />
-        </View>
-        <View style={styles.btnContainer}>
+        </Animated.View>
+        <Animated.View style={[styles.btnContainer, animateModalContent]}>
           <Pressable
             onPress={() => navigation.navigate("SignUp", { fromScreen: "AuthScreen" })}
             style={styles.signUpBtn}
@@ -108,8 +133,8 @@ const AuthScreen = ({ navigation }: AuthScreenProps) => {
               LOGIN
             </CustomText>
           </Pressable>
-        </View>
-      </View>
+        </Animated.View>
+      </Animated.View>
     </View>
   );
 };
