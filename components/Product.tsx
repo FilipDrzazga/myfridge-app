@@ -9,6 +9,7 @@ import Animated, {
   ZoomIn,
   ZoomOut,
 } from "react-native-reanimated";
+import { FIREBASE_DB, ref, update } from "../firebase/firebaseConfig";
 
 import { AppContext, type State } from "../context/AppContext";
 import { AuthContext } from "../context/AuthContex";
@@ -29,12 +30,24 @@ const Product = ({ product }: ProductProps) => {
   const opacity = useSharedValue(1);
 
   const increaseQuantity = () => {
+    const updates = {};
+    const pathObjectToupdate = `users/${ctxAuth.userId}/fridge/${product.databaseRefId}`;
+    const updateDataProduct = { ...product, quantity: +product.quantity + 1 };
+    updates[pathObjectToupdate] = updateDataProduct;
+    update(ref(FIREBASE_DB), updates);
+
     ctxApp.dispatch({
       type: "UPDATE_PRODUCT",
       payload: { field: "quantity", id: product.id.toString(), action: "increase" },
     });
   };
   const decreaseQuantity = () => {
+    const updates = {};
+    const pathObjectToupdate = `users/${ctxAuth.userId}/fridge/${product.databaseRefId}`;
+    const updateDataProduct = { ...product, quantity: +product.quantity - 1 };
+    updates[pathObjectToupdate] = updateDataProduct;
+    update(ref(FIREBASE_DB), updates);
+
     ctxApp.dispatch({
       type: "UPDATE_PRODUCT",
       payload: { field: "quantity", id: product.id.toString(), action: "decrease" },
