@@ -37,7 +37,7 @@ const ProductDate = ({
       mode: "date",
       display: "spinner",
       maximumDate: new Date(2030, 11, 25),
-      minimumDate: new Date(2024, 0, 1),
+      minimumDate: new Date(),
       is24Hour: true,
     });
   };
@@ -52,7 +52,10 @@ const ProductDate = ({
       mode: "date",
       display: "spinner",
       maximumDate: new Date(2030, 11, 25),
-      minimumDate: new Date(),
+      minimumDate: (() => {
+        const today = new Date();
+        return new Date(today.getFullYear(), today.getMonth(), today.getDate() + 1);
+      })(),
       is24Hour: true,
     });
   };
